@@ -10,7 +10,6 @@ class ChatToolBox extends StatelessWidget {
     this.onTapCamera,
     this.onTapCard,
     this.onTapFile,
-    this.onTapLocation,
     this.onTapDirectionalMessage,
   });
   final Function()? onTapAlbum;
@@ -18,7 +17,6 @@ class ChatToolBox extends StatelessWidget {
   final Function()? onTapCall;
   final Function()? onTapFile;
   final Function()? onTapCard;
-  final Function()? onTapLocation;
   final VoidCallback? onTapDirectionalMessage;
 
   @override
@@ -49,11 +47,6 @@ class ChatToolBox extends StatelessWidget {
         text: StrRes.toolboxCard,
         icon: ImageRes.toolboxCard,
         onTap: onTapCard,
-      ),
-      ToolboxItemInfo(
-        text: StrRes.toolboxLocation,
-        icon: ImageRes.toolboxLocation,
-        onTap: () => Permissions.location(onTapLocation),
       ),
       if (onTapDirectionalMessage != null)
         ToolboxItemInfo(

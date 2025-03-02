@@ -60,6 +60,13 @@ class ConversationPage extends StatelessWidget {
               )),
           body: Column(
             children: [
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: logic.globalSearch,
+                child: SearchBox(
+                  margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
+                ),
+              ),
               Expanded(
                 child: SlidableAutoCloseBehavior(
                   child: ScrollablePositionedList.builder(
@@ -117,7 +124,7 @@ class ConversationPage extends StatelessWidget {
           child: Stack(
             children: [
               Container(
-                height: 68,
+                height: 73,
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Row(
                   children: [
@@ -149,6 +156,18 @@ class ConversationPage extends StatelessWidget {
                               ),
                               const Spacer(),
                               logic.getTime(info).toText..style = Styles.ts_8E9AB0_12sp,
+                            ],
+                          ),
+                          3.verticalSpace,
+                          Row(
+                            children: [
+                              ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: 180.w),
+                                child: "托云信息技术有限公司".toText
+                                  ..style = Styles.ts_8E9AB0_12sp
+                                  ..maxLines = 1
+                                  ..overflow = TextOverflow.ellipsis,
+                              ),
                             ],
                           ),
                           3.verticalSpace,
