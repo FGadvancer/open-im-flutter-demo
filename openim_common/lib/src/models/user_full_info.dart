@@ -24,6 +24,9 @@ class UserFullInfo {
   String? ex;
   String? station;
   int? globalRecvMsgOpt;
+  String? enterprise;
+  String? position;
+  String? enterpriseWebsite;
   bool isFriendship = false;
   bool isBlacklist = false;
   List<DepartmentInfo>? departmentList;
