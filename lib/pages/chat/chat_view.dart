@@ -243,7 +243,6 @@ class ChatPage extends StatelessWidget {
                       onTapCall: logic.call,
                       onTapCard: logic.onTapCarte,
                       onTapFile: logic.onTapFile,
-                      onTapLocation: logic.onTapLocation,
                     ),
                     voiceRecordBar: bar,
                     emojiView: ChatEmojiView(
