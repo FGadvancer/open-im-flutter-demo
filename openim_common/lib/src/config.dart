@@ -50,7 +50,7 @@ class Config {
   static const double textScaleFactor = 1.0;
 
   static const discoverPageURL = 'https://docs.openim.io/';
-  static const allowSendMsgNotFriend = '1';
+  static const allowSendMsgNotFriend = '0';
   // amap key
   static const webKey = 'webKey';
   static const webServerKey = 'webServerKey';
@@ -65,7 +65,7 @@ class Config {
   static const friendScheme = "io.openim.app/addFriend/";
   static const groupScheme = "io.openim.app/joinGroup/";
 
-  static const _host = "web.rentsoft.cn";
+  static const _host = "101.42.151.19";
 
   static const _ipRegex = '((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)';
 

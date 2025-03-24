@@ -48,7 +48,7 @@ class ConversationPage extends StatelessWidget {
                           ..maxLines = 1
                           ..overflow = TextOverflow.ellipsis,
                       ),
-                    10.horizontalSpace,
+            10.horizontalSpace,
                     if (null != logic.imSdkStatus && (!logic.reInstall || logic.isFailedSdkStatus))
                       Flexible(
                           child: SyncStatusView(

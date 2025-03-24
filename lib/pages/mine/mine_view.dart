@@ -20,7 +20,7 @@ class MinePage extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 138.h,
+                  height: 180.h,
                   width: 1.sw,
                   color: Styles.c_0089FF,
                   child: ImageRes.mineHeaderBg.toImage,

@@ -57,6 +57,7 @@ class ChatLogic extends SuperController {
   Message? quoteMsg;
   final messageList = <Message>[].obs;
   final tempMessages = <Message>[]; // 临时存放消息体，例如图片消息
+  final quoteContent = "".obs;
   var _lastCursorIndex = -1;
   final onlineStatus = false.obs;
   final onlineStatusDesc = ''.obs;
@@ -615,6 +616,22 @@ class ChatLogic extends SuperController {
 
   void _completed() {
     messageList.refresh();
+  }
+
+  void setQuoteMsg(Message? message) {
+    if (message == null) {
+      quoteMsg = null;
+      quoteContent.value = '';
+    } else {
+      quoteMsg = message;
+      var name = quoteMsg!.senderNickname;
+      quoteContent.value =
+      "$name：${quoteMsg?.contentType == MessageType.revokeMessageNotification ? StrRes.quoteContentBeRevoked : IMUtils.parseMsg(
+        quoteMsg!,
+        replaceIdToNickname: true,
+      )}";
+      focusNode.requestFocus();
+    }
   }
 
   void deleteMsg(Message message) async {

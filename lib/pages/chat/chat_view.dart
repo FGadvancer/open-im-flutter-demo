@@ -222,6 +222,7 @@ class ChatPage extends StatelessWidget {
                 onCloseMultiModel: logic.exit,
                 onClickMoreBtn: logic.chatSetup,
                 onClickCallBtn: logic.call,
+                showCallBtn: false,
               ),
               body: SafeArea(
                 child: WaterMarkBgView(
@@ -234,13 +235,15 @@ class ChatPage extends StatelessWidget {
                     controller: logic.inputCtrl,
                     focusNode: logic.focusNode,
                     isNotInGroup: logic.isInvalidGroup,
+                    quoteContent: logic.quoteContent.value,
+                    onClearQuote: () => logic.setQuoteMsg(null),
                     directionalText: logic.directionalText(),
                     onCloseDirectional: logic.onClearDirectional,
                     onSend: (v) => logic.sendTextMsg(),
                     toolbox: ChatToolBox(
                       onTapAlbum: logic.onTapAlbum,
                       onTapCamera: logic.onTapCamera,
-                      onTapCall: logic.call,
+                      // onTapCall: logic.call,
                       onTapCard: logic.onTapCarte,
                       onTapFile: logic.onTapFile,
                     ),

@@ -37,6 +37,10 @@ class PersonalInfoLogic extends GetxController {
         val?.email = existUser.email;
         val?.gender = existUser.gender;
         val?.mobile = existUser.mobile;
+        val?.enterprise = existUser.enterprise;
+        val?.position = existUser.position;
+        val?.enterpriseWebsite = existUser.enterpriseWebsite;
+        val?.tags = existUser.tags;
       });
     }
 
@@ -56,6 +60,10 @@ class PersonalInfoLogic extends GetxController {
         val?.telephone = info.telephone;
         val?.phoneNumber = info.phoneNumber;
         val?.email = info.email;
+        val?.enterprise = info.enterprise;
+        val?.position = info.position;
+        val?.enterpriseWebsite = info.enterpriseWebsite;
+        val?.tags = info.tags;
       });
     }
   }
@@ -77,6 +85,14 @@ class PersonalInfoLogic extends GetxController {
   String? get phoneNumber => IMUtils.emptyStrToNull(userFullInfo.value.phoneNumber) ?? '-';
 
   String? get email => IMUtils.emptyStrToNull(userFullInfo.value.email) ?? '-';
+
+  String? get enterprise => IMUtils.emptyStrToNull(userFullInfo.value.enterprise) ?? '-';
+
+  String? get position => IMUtils.emptyStrToNull(userFullInfo.value.position) ?? '-';
+
+  String? get enterpriseWebsite => IMUtils.emptyStrToNull(userFullInfo.value.enterpriseWebsite) ?? '-';
+
+  List<String>? get tags => userFullInfo.value.tags;
 
   clickPhoneNumber() => _callSystemPhone(userFullInfo.value.phoneNumber);
 

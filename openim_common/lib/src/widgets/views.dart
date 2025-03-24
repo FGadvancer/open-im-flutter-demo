@@ -24,9 +24,45 @@ class IMViews {
 
   static final ImagePicker _picker = ImagePicker();
 
-  static Future showToast(String msg, {Duration? duration}) {
+  static Future showToast(String msg, {Duration? duration,EasyLoadingToastPosition? toastPosition}) {
     if (msg.trim().isNotEmpty) {
-      return EasyLoading.showToast(msg, duration: duration);
+      return EasyLoading.showToast(msg, duration: duration,toastPosition: toastPosition);
+    } else {
+      return Future.value();
+    }
+  }
+
+  static Future showInfoToast(String msg, {Duration? duration, EasyLoadingToastPosition? toastPosition}) {
+    if (msg.trim().isNotEmpty) {
+      return EasyLoading.showToast(
+        msg,
+        duration: duration,
+        toastPosition: toastPosition,
+      );
+    } else {
+      return Future.value();
+    }
+  }
+
+  static Future showAnimatedToast(String msg, {Duration? duration}) async {
+    if (msg.trim().isNotEmpty) {
+      Get.snackbar(
+        '',
+        msg,
+        snackPosition: SnackPosition.BOTTOM,
+        animationDuration: Duration(milliseconds: 300),
+        duration: duration ?? Duration(seconds: 2),
+        margin: const EdgeInsets.all(12),
+        backgroundColor: Colors.black87,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+
+  static Future showErrorToast(String msg, {Duration? duration, EasyLoadingToastPosition? toastPosition = EasyLoadingToastPosition.center}) {
+    if (msg.trim().isNotEmpty) {
+      return EasyLoading.showToast(msg, duration: duration,toastPosition: toastPosition);
     } else {
       return Future.value();
     }

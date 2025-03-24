@@ -163,6 +163,8 @@ class AppNavigator {
   static startEditMyInfo({EditAttr attr = EditAttr.nickname, int? maxLength}) =>
       Get.toNamed(AppRoutes.editMyInfo, arguments: {'editAttr': attr, 'maxLength': maxLength});
 
+  static startEditTags() => Get.toNamed(AppRoutes.editTags);
+
   static startAccountSetup() => Get.toNamed(AppRoutes.accountSetup);
 
   static startBlacklist() => Get.toNamed(AppRoutes.blacklist);

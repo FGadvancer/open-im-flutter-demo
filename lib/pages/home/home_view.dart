@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
           item: ItemConfig(
             icon: ImageRes.homeTab3Sel.toImage,
             inactiveIcon: ImageRes.homeTab3Nor.toImage,
-            title: StrRes.workbench,
+            title: StrRes.brand,
             textStyle: Styles.ts_0089FF_10sp_semibold,
           ),
         ),

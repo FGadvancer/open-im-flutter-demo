@@ -28,6 +28,16 @@ class MyInfoLogic extends GetxController {
 
   void editEmail() => AppNavigator.startEditMyInfo(attr: EditAttr.email, maxLength: 30);
 
+  void editEnterpriseName() => AppNavigator.startEditMyInfo(
+        attr: EditAttr.enterprise,
+      );
+  void editEnterpriseWebsite() => AppNavigator.startEditMyInfo(
+        attr: EditAttr.enterpriseWebsite,maxLength: 30
+      );
+
+
+  void editTags() => AppNavigator.startEditTags();
+
   void openPhotoSheet() {
     IMViews.openPhotoSheet(
         onData: (path, url) async {
@@ -122,6 +132,10 @@ class MyInfoLogic extends GetxController {
         val?.phoneNumber = info.phoneNumber;
         val?.birth = info.birth;
         val?.email = info.email;
+        val?.enterprise = info.enterprise;
+        val?.position = info.position;
+        val?.enterpriseWebsite = info.enterpriseWebsite;
+        val?.tags = info.tags;
       });
     }
   }

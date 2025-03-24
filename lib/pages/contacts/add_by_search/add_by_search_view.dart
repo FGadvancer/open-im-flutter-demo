@@ -25,7 +25,7 @@ class AddContactsBySearchPage extends StatelessWidget {
           SearchBox(
             focusNode: logic.focusNode,
             controller: logic.searchCtrl,
-            hintText: logic.isSearchUser ? StrRes.searchByPhoneAndUid : StrRes.searchIDAddGroup,
+            hintText: logic.isSearchUser ? StrRes.searchUsers : StrRes.searchIDAddGroup,
             enabled: true,
             autofocus: true,
             margin: EdgeInsets.symmetric(horizontal: 17.w, vertical: 10.h),
@@ -103,11 +103,16 @@ class AddContactsBySearchPage extends StatelessWidget {
                 ..width = 24.w
                 ..height = 24.h,
               12.horizontalSpace,
-              logic.getShowTitle(info).toText
-                ..style = Styles.ts_0089FF_17sp
-                ..maxLines = 1
-                ..overflow = TextOverflow.ellipsis,
+              Expanded(
+                child: RichText(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  text: logic.getMergedMatchedSpan(info, logic.searchKey),
+                ),
+              ),
             ],
+
+
           ),
         ),
       );

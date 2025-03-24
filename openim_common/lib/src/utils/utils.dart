@@ -1663,6 +1663,42 @@ class IMUtils {
   static bool isValidPassword(String password) => RegExp(
         r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{6,20}$',
       ).hasMatch(password);
+  static bool isValidWebsite(String url) {
+    const urlPattern = r'^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(:[0-9]{1,5})?(\/.*)?$';
+    final result = RegExp(urlPattern).hasMatch(url);
+    Logger.print('---------isValidWebsite------- $result');
+    return result;
+  }
+
+  static bool isValidNickname(String nickname) {
+    const int minLength = 2;
+    const int maxChineseLength = 8;
+    const int maxEnglishLength = 16;
+
+
+    final bool isNicknameChinese = isChinese(nickname);
+    final int maxLength = isNicknameChinese ? maxChineseLength : maxEnglishLength;
+
+    return nickname.length >= minLength && nickname.length <= maxLength;
+  }
+
+  static bool isChinese(String text) {
+    final RegExp regex = RegExp(r'[\u4e00-\u9fa5]');
+    return regex.hasMatch(text);
+  }
+
+
+  static bool isValidEnterpriseName(String enterpriseName) {
+    const int minLength = 2;
+    const int maxChineseLength = 16;
+    const int maxEnglishLength = 32;
+
+
+    final bool isEnterpriseNameChinese = isChinese(enterpriseName);
+    final int maxLength = isEnterpriseNameChinese ? maxChineseLength : maxEnglishLength;
+
+    return enterpriseName.length >= minLength && enterpriseName.length <= maxLength;
+  }
 
   static TextInputFormatter getPasswordFormatter() => FilteringTextInputFormatter.allow(
         RegExp(r'[a-zA-Z0-9\S]'),

@@ -78,6 +78,15 @@ class LoginLogic extends GetxController with GetTickerProviderStateMixin {
 
   late TabController tabController;
 
+  @override
+  void onInit() {
+    tabController = TabController(length: 3, vsync: this);
+    _initData();
+    phoneCtrl.addListener(_onChanged);
+    pwdCtrl.addListener(_onChanged);
+    verificationCodeCtrl.addListener(_onChanged);
+    super.onInit();
+  }
   _initData() async {
     var map = DataSp.getLoginAccount();
     if (map is Map) {
@@ -104,16 +113,6 @@ class LoginLogic extends GetxController with GetTickerProviderStateMixin {
     verificationCodeCtrl.dispose();
     tabController.dispose();
     super.onClose();
-  }
-
-  @override
-  void onInit() {
-    tabController = TabController(length: 3, vsync: this);
-    _initData();
-    phoneCtrl.addListener(_onChanged);
-    pwdCtrl.addListener(_onChanged);
-    verificationCodeCtrl.addListener(_onChanged);
-    super.onInit();
   }
 
   @override

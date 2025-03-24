@@ -27,6 +27,7 @@ class UserFullInfo {
   String? enterprise;
   String? position;
   String? enterpriseWebsite;
+  List<String>? tags;
   bool isFriendship = false;
   bool isBlacklist = false;
   List<DepartmentInfo>? departmentList;
@@ -61,6 +62,10 @@ class UserFullInfo {
     this.station,
     this.ex,
     this.globalRecvMsgOpt,
+    this.enterprise,
+    this.position,
+    this.enterpriseWebsite,
+    this.tags,
     this.isFriendship = false,
     this.isBlacklist = false,
     this.departmentList,
@@ -92,6 +97,9 @@ class UserFullInfo {
     station = json['station'];
     ex = json['ex'];
     globalRecvMsgOpt = json['globalRecvMsgOpt'];
+    enterprise = json['enterprise'];
+    enterpriseWebsite = json['enterpriseWebsite'];
+    tags = json['tags'] == null ? null : List<String>.from(json['tags']);
     isFriendship = json['isFriendship'] ?? false;
     isBlacklist = json['isBlacklist'] ?? false;
     departmentList = json['departmentList'] == null

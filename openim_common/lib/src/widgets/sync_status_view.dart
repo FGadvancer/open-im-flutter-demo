@@ -36,7 +36,14 @@ class SyncStatusView extends StatelessWidget {
                   ),
                 ),
           4.horizontalSpace,
-          statusStr.toText..style = (isFailed ? Styles.ts_FF381F_12sp : Styles.ts_0089FF_12sp),
+          Flexible(
+            child: Text(
+              statusStr,
+              style: isFailed ? Styles.ts_FF381F_12sp : Styles.ts_0089FF_12sp,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
         ],
       ),
     );

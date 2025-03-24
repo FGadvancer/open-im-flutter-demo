@@ -71,7 +71,8 @@ class HttpUtil {
         return resp.data;
       } else {
         if (showErrorToast) {
-          IMViews.showToast(resp.errDlt);
+          //todo  can be set err info from error code from local string
+          IMViews.showErrorToast(resp.errDlt);
         }
 
         return Future.error((resp.errCode, resp.errMsg));
@@ -79,11 +80,11 @@ class HttpUtil {
     } catch (error) {
       if (error is DioException) {
         final errorMsg = '接口：$path  信息：${error.message}';
-        if (showErrorToast) IMViews.showToast(errorMsg);
+        if (showErrorToast) IMViews.showErrorToast(StrRes.networkError);
         return Future.error(errorMsg);
       }
       final errorMsg = '接口：$path  信息：${error.toString()}';
-      if (showErrorToast) IMViews.showToast(errorMsg);
+      if (showErrorToast) IMViews.showErrorToast(StrRes.networkError);
       return Future.error(error);
     }
   }
@@ -173,7 +174,7 @@ class HttpUtil {
           final filePath = result['filePath'].split('//').last;
           tips = '${StrRes.saveSuccessfully}:$filePath';
         }
-        IMViews.showToast(tips);
+        IMViews.showInfoToast(tips);
       }
     }
   }
@@ -207,7 +208,7 @@ class HttpUtil {
               final filePath = result['filePath'].split('//').last;
               tips = '${StrRes.saveSuccessfully}:$filePath';
             }
-            IMViews.showToast(tips);
+            IMViews.showInfoToast(tips);
           }
         }
       },
@@ -226,7 +227,7 @@ class HttpUtil {
           final filePath = result['filePath'].split('//').last;
           tips = '${StrRes.saveSuccessfully}:$filePath';
         }
-        IMViews.showToast(tips);
+        IMViews.showInfoToast(tips);
       }
     });
   }

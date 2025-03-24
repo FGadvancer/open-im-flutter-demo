@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:openim/pages/mine/edit_tags/edit_tags_binding.dart';
+import 'package:openim/pages/mine/edit_tags/edit_tags_view.dart';
 
 import '../pages/chat/chat_binding.dart';
 import '../pages/chat/chat_setup/chat_setup_binding.dart';
@@ -211,6 +213,11 @@ class AppPages {
       name: AppRoutes.editMyInfo,
       page: () => EditMyInfoPage(),
       binding: EditMyInfoBinding(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.editTags,
+      page: () => EditTagsPage(),
+      binding: EditTagsBinding(),
     ),
     _pageBuilder(
       name: AppRoutes.accountSetup,

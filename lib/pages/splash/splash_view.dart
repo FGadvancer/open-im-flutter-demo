@@ -12,24 +12,13 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Styles.c_0089FF_opacity10, Styles.c_FFFFFF_opacity0],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Positioned(
-            bottom: 130.h,
-            child: ImageRes.splashLogo.toImage
-              ..width = 55.61.w
-              ..height = 78.91.h,
-          ),
-        ],
+    return Scaffold(
+      backgroundColor:Colors.blue.shade300,
+      body: Center(
+        child: ImageRes.splashBackground.toImage
+          ..width = double.infinity
+          ..height = double.infinity
+          ..fit = BoxFit.cover, // 让图片铺满屏幕
       ),
     );
   }

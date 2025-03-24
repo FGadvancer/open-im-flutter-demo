@@ -241,7 +241,7 @@ mixin OpenIMLive {
         return;
       }
     }
-    IMViews.showToast(StrRes.networkError);
+    IMViews.showErrorToast(StrRes.networkError);
   }
 
   onRoomDisconnected(SignalingInfo signalingInfo) {}

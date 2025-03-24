@@ -66,6 +66,26 @@ class MyInfoPage extends StatelessWidget {
                       value: imLogic.userInfo.value.email,
                       onTap: logic.editEmail,
                     ),
+                    _buildItemView(
+                      label: StrRes.enterpriseName,
+                      value: imLogic.userInfo.value.enterprise,
+                      onTap: logic.editEnterpriseName,
+                    ),
+                    _buildItemView(
+                      label: StrRes.website,
+                      value: imLogic.userInfo.value.enterpriseWebsite,
+                      onTap: logic.editEnterpriseWebsite,
+                    ),
+                  ],
+                ),
+                10.verticalSpace,
+                _buildCornerBgView(
+                  children: [
+                    _buildItemWithTags(
+                      label: StrRes.tags,
+                      tags: imLogic.userInfo.value.tags,
+                      onTap: logic.editTags,
+                    ),
                   ],
                 ),
               ],
@@ -130,4 +150,55 @@ class MyInfoPage extends StatelessWidget {
           ),
         ),
       );
+
+  Widget _buildItemWithTags({
+    required String label,
+    List<String>? tags,
+    Function()? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.translucent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  label,
+                  style: Styles.ts_0C1C33_17sp,
+                ),
+              ],
+            ),
+            if (tags != null && tags.isNotEmpty) ...[
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerRight,
+                child:           Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  alignment: WrapAlignment.end,
+                  children: tags.map((tag) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[100], // 统一背景色
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        tag,
+                        style: TextStyle(fontSize: 14, color: Styles.c_0C1C33),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 }

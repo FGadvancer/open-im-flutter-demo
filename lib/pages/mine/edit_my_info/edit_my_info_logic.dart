@@ -11,6 +11,8 @@ enum EditAttr {
   telephone,
   mobile,
   email,
+  enterprise,
+  enterpriseWebsite,
 }
 
 class EditMyInfoLogic extends GetxController {
@@ -52,12 +54,25 @@ class EditMyInfoLogic extends GetxController {
         defaultValue = imLogic.userInfo.value.email;
         keyboardType = TextInputType.emailAddress;
         break;
+      case EditAttr.enterprise:
+         title = StrRes.enterpriseName;
+         defaultValue = imLogic.userInfo.value.enterprise;
+         keyboardType = TextInputType.text;
+      case EditAttr.enterpriseWebsite:
+        title = StrRes.website;
+        defaultValue = imLogic.userInfo.value.enterpriseWebsite;
+        keyboardType = TextInputType.text;
+        break;
     }
   }
 
   void save() async {
     final value = inputCtrl.text.trim();
     if (editAttr == EditAttr.nickname) {
+      if (!IMUtils.isValidNickname(value)) {
+        IMViews.showToast(StrRes.nicknameLengthInvalid);
+         return;
+      }
       await LoadingView.singleton.wrap(
         asyncFunction: () => Apis.updateUserInfo(
           userID: OpenIM.iMManager.userID,
@@ -90,6 +105,34 @@ class EditMyInfoLogic extends GetxController {
       );
       imLogic.userInfo.update((val) {
         val?.email = value;
+      });
+    }else if (editAttr == EditAttr.enterprise) {
+      if (!IMUtils.isValidEnterpriseName(value)) {
+        IMViews.showToast(StrRes.enterpriseNameLengthInvalid);
+        return;
+      }
+      await LoadingView.singleton.wrap(
+        asyncFunction: () => Apis.updateUserInfo(
+          userID: OpenIM.iMManager.userID,
+          enterpriseName: value,
+        ),
+      );
+      imLogic.userInfo.update((val) {
+        val?.enterprise = value;
+      });
+    } else if (editAttr == EditAttr.enterpriseWebsite) {
+      if (!IMUtils.isValidWebsite(value)) {
+        IMViews.showToast(StrRes.plsEnterValidWebsite);
+        return;
+      }
+      await LoadingView.singleton.wrap(
+        asyncFunction: () => Apis.updateUserInfo(
+          userID: OpenIM.iMManager.userID,
+          website: value,
+        ),
+      );
+      imLogic.userInfo.update((val) {
+        val?.enterpriseWebsite = value;
       });
     }
     Get.back();

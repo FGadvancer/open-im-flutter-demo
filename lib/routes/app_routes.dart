@@ -19,6 +19,7 @@ abstract class AppRoutes {
   static const groupProfilePanel = '/group_profile_panel';
   static const myInfo = '/my_info';
   static const editMyInfo = '/edit_my_info';
+  static const editTags = '/edit_tags';
   static const accountSetup = '/account_setup';
   static const blacklist = '/blacklist';
   static const languageSetup = '/language_setup';

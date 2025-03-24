@@ -36,9 +36,7 @@ class UserProfilePanelPage extends StatelessWidget {
                   children: [
                     _buildBaseInfoView(),
                     if (logic.isGroupMemberPage) _buildEnterGroupMethodView(),
-                    if (logic.isFriendship ||
-                        logic.isMyself ||
-                        logic.isGroupMemberPage && !logic.notAllowLookGroupMemberProfiles.value)
+                    if(!(logic.isGroupMemberPage && logic.notAllowLookGroupMemberProfiles.value))
                       _buildItemView(
                         label: StrRes.personalInfo,
                         showRightArrow: true,
@@ -234,11 +232,11 @@ class UserProfilePanelPage extends StatelessWidget {
               height: 108.h,
               child: Row(
                 children: [
-                  Expanded(
-                    child: ImageTextButton.call(
-                      onTap: logic.toCall,
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: ImageTextButton.call(
+                  //     onTap: logic.toCall,
+                  //   ),
+                  // ),
                   11.horizontalSpace,
                   Expanded(
                     child: ImageTextButton.message(

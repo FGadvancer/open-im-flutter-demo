@@ -23,7 +23,7 @@ class AboutUsLogic extends GetxController {
     final appName = packageInfo.appName;
     final buildNumber = packageInfo.buildNumber;
 
-    displayVersion.value = '$appName $version+$buildNumber SDK: ${OpenIM.version}';
+    displayVersion.value = '$appName v1.0.0';
   }
 
   void checkUpdate() {

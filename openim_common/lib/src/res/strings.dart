@@ -90,6 +90,22 @@ class StrRes {
 
   static String get plsEnterYourNickname => 'plsEnterYourNickname'.tr;
 
+  static String get plsEnterEnterpriseName => 'plsEnterEnterpriseName'.tr;
+
+  static String get enterpriseNameLengthInvalid => 'enterpriseNameLengthInvalid'.tr;
+
+  static String get nicknameLengthInvalid => 'nicknameLengthInvalid'.tr;
+
+  static String get maxTagsLimit => 'maxTagsLimit'.tr;
+
+  static String get plsUploadAvatar => 'plsUploadAvatar'.tr;
+
+  static String get plsEnterWebsite=> 'plsEnterWebsite'.tr;
+
+  static String get plsEnterValidWebsite=> 'plsEnterValidWebsite'.tr;
+
+  static String get plsSelectAvatar => 'plsSelectAvatar'.tr;
+
   static String get setInfo => 'setInfo'.tr;
 
   static String get loginPwdFormat => 'loginPwdFormat'.tr;
@@ -102,7 +118,7 @@ class StrRes {
 
   static String get contacts => 'contacts'.tr;
 
-  static String get workbench => 'workbench'.tr;
+  static String get brand => 'brand'.tr;
 
   static String get mine => 'mine'.tr;
 
@@ -370,6 +386,10 @@ class StrRes {
 
   static String get qrcodeHint => 'qrcodeHint'.tr;
 
+  static String get unrecognizedQrcode => 'unrecognizedQrcode'.tr;
+
+  static String get scanResult => 'scanResult'.tr;
+
   static String get favoriteFace => 'favoriteFace'.tr;
 
   static String get favoriteManage => 'favoriteManage'.tr;
@@ -476,6 +496,10 @@ class StrRes {
 
   static String get nickname => 'nickname'.tr;
 
+  static String get enterpriseName => 'enterpriseName'.tr;
+
+  static String get website => 'website'.tr;
+
   static String get gender => 'gender'.tr;
 
   static String get englishName => 'englishName'.tr;
@@ -485,6 +509,8 @@ class StrRes {
   static String get tel => 'tel'.tr;
 
   static String get mobile => 'mobile'.tr;
+
+  static String get tags => 'tags'.tr;
 
   static String get email => 'email'.tr;
 
@@ -759,6 +785,8 @@ class StrRes {
   static String get plsEnterGroupNameHint => 'plsEnterGroupNameHint'.tr;
 
   static String get completeCreation => 'completeCreation'.tr;
+
+  static String get tagsInputHint => 'tagsInputHint'.tr;
 
   static String get sendCarteConfirmHint => 'sendCarteConfirmHint'.tr;
 
@@ -1110,7 +1138,7 @@ class StrRes {
   static String get serverSettingTips => 'serverSettingTips'.tr;
   static String get logLevel => 'logLevel'.tr;
   static String get callFail => 'callFail'.tr;
-  static String get searchByPhoneAndUid => 'search_by_phone_and_uid'.tr;
+  static String get searchUsers => 'searchUsers'.tr;
   static String get specialMessage => 'special_message'.tr;
   static String get editGroupName => 'edit_group_name'.tr;
   static String get editGroupTips => 'edit_group_tips'.tr;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -22,19 +24,31 @@ class LoadingView {
   Future<T> wrap<T>({
     required Future<T> Function() asyncFunction,
     bool showing = true,
+    Duration threshold = const Duration(milliseconds: 1500),
   }) async {
-    await Future.delayed(1.milliseconds);
-    if (showing) show();
+
+    Timer? timer;
+    if (showing) {
+      timer = Timer(threshold, () {
+        show();
+      });
+    }
+
     T data;
     try {
       data = await asyncFunction();
     } on Exception catch (_) {
       rethrow;
     } finally {
-      dismiss();
+
+      timer?.cancel();
+      if (showing) {
+        dismiss();
+      }
     }
     return data;
   }
+
 
   void show() async {
     if (_isVisible) return;

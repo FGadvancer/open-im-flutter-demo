@@ -64,6 +64,8 @@ class Apis {
   static Future<LoginCertificate> register({
     required String nickname,
     required String password,
+    required String enterpriseName,
+    required String website,
     String? faceURL,
     String? areaCode,
     String? phoneNumber,
@@ -91,6 +93,8 @@ class Apis {
           'phoneNumber': phoneNumber,
           'account': account,
           'password': IMUtils.generateMD5(password),
+          'enterprise':enterpriseName,
+          'enterpriseWebsite':website,
         },
       });
 
@@ -190,6 +194,10 @@ class Apis {
     String? email,
     String? nickname,
     String? faceURL,
+    String? enterpriseName,
+    String? website,
+    List<String>? tags,
+    bool? clearTags,
     int? gender,
     int? birth,
     int? level,
@@ -204,7 +212,6 @@ class Apis {
           param[key] = value;
         }
       }
-
       put('account', account);
       put('phoneNumber', phoneNumber);
       put('areaCode', areaCode);
@@ -212,13 +219,15 @@ class Apis {
       put('nickname', nickname);
       put('faceURL', faceURL);
       put('gender', gender);
-      put('gender', gender);
+      put('tags', tags);
+      put('clearTags', clearTags);
       put('level', level);
       put('birth', birth);
       put('allowAddFriend', allowAddFriend);
       put('allowBeep', allowBeep);
       put('allowVibration', allowVibration);
-
+      put('enterprise', enterpriseName);
+      put('enterpriseWebsite', website);
       return HttpUtil.post(
         Urls.updateUserInfo,
         data: {
@@ -272,6 +281,7 @@ class Apis {
     try {
       final data = await HttpUtil.post(
         Urls.getUsersFullInfo,
+        showErrorToast: false,
         data: {
           'pagination': {'pageNumber': pageNumber, 'showNumber': showNumber},
           'userIDs': userIDList,
@@ -345,7 +355,7 @@ class Apis {
         'invitationCode': invitationCode
       },
     ).then((value) {
-      IMViews.showToast(StrRes.sentSuccessfully);
+      IMViews.showInfoToast(StrRes.sentSuccessfully);
       return true;
     }).catchError((e, s) {
       Logger.print('e:$e s:$s');

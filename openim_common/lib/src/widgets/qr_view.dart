@@ -254,16 +254,16 @@ class _QrcodeViewState extends State<QrcodeView> with TickerProviderStateMixin {
       } else if (IMUtils.isUrlValid(result)) {
         final uri = Uri.parse(Uri.encodeFull(result));
         if (!await launchUrl(uri)) {
-          IMViews.showToast('无法识别!');
+          IMViews.showErrorToast(StrRes.unrecognizedQrcode);
           controller?.resumeCamera();
         }
       } else {
         Get.back(result: result);
-        IMViews.showToast('扫码结果：$result');
+        IMViews.showInfoToast('${StrRes.scanResult}：$result');
       }
     } else {
       Get.back();
-      IMViews.showToast('无法识别');
+      IMViews.showErrorToast(StrRes.unrecognizedQrcode);
     }
   }
 }

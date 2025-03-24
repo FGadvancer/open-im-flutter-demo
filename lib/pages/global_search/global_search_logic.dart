@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_openim_sdk/flutter_openim_sdk.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:openim/routes/app_navigator.dart';
 import 'package:openim_common/openim_common.dart';
 import 'package:pull_to_refresh_new/pull_to_refresh.dart';
 
@@ -14,6 +16,7 @@ class GlobalSearchLogic extends CommonSearchLogic {
   final groupList = <GroupInfo>[].obs;
   final textSearchResultItems = <SearchResultItems>[].obs;
 
+  // final fileSearchResultItems = <SearchResultItems>[].obs;
   final fileMessageList = <Message>[].obs;
   final index = 0.obs;
   final tabs = [
@@ -38,6 +41,120 @@ class GlobalSearchLogic extends CommonSearchLogic {
     groupList.clear();
     textSearchResultItems.clear();
     fileMessageList.clear();
+  }
+
+  bool get isSearchNotResult =>
+      searchKey.isNotEmpty &&
+          contactsList.isEmpty &&
+          groupList.isEmpty &&
+          textSearchResultItems.isEmpty &&
+          fileMessageList.isEmpty;
+
+  search() async {
+    final result = await LoadingView.singleton.wrap(
+        asyncFunction: () => Future.wait([
+          searchFriend(),
+          searchGroup(),
+          searchTextMessage(
+            pageIndex: textMessagePageIndex = 1,
+            count: count,
+          ),
+          searchFileMessage(
+            pageIndex: fileMessagePageIndex = 1,
+            count: count,
+          ),
+        ]));
+
+    final friendList = (result[0] as List<FriendInfo>)
+        .map((e) => UserInfo(userID: e.userID, nickname: e.nickname, faceURL: e.faceURL));
+    final gList = result[1] as List<GroupInfo>;
+    final textMessageResult = (result[2] as SearchResult).searchResultItems;
+    final fileMessageResult = (result[3] as SearchResult).searchResultItems;
+
+    clearList();
+
+    contactsList.assignAll(friendList);
+    groupList.assignAll(gList);
+    textSearchResultItems.assignAll(textMessageResult ?? []);
+    fileMessageList.clear();
+    if (null != fileMessageResult && fileMessageResult.isNotEmpty) {
+      for (var element in fileMessageResult) {
+        fileMessageList.addAll(element.messageList!);
+      }
+    }
+    if ((textMessageResult ?? []).length < count) {
+      textMessageRefreshCtrl.loadNoData();
+    } else {
+      textMessageRefreshCtrl.loadComplete();
+    }
+    if ((fileMessageResult ?? []).length < count) {
+      fileMessageRefreshCtrl.loadNoData();
+    } else {
+      fileMessageRefreshCtrl.loadComplete();
+    }
+  }
+
+  void loadTextMessage() async {
+    final result = await searchTextMessage(pageIndex: ++textMessagePageIndex, count: count);
+    final textMessageResult = result.searchResultItems;
+    textSearchResultItems.addAll(textMessageResult ?? []);
+    if ((textMessageResult ?? []).length < count) {
+      textMessageRefreshCtrl.loadNoData();
+    } else {
+      textMessageRefreshCtrl.loadComplete();
+    }
+  }
+
+  void loadFileMessage() async {
+    final result = await searchFileMessage(pageIndex: ++fileMessagePageIndex, count: count);
+    final fileMessageResult = result.searchResultItems;
+    if (null != fileMessageResult && fileMessageResult.isNotEmpty) {
+      for (var element in fileMessageResult) {
+        fileMessageList.addAll(element.messageList!);
+      }
+    }
+    if ((fileMessageResult ?? []).length < count) {
+      fileMessageRefreshCtrl.loadNoData();
+    } else {
+      fileMessageRefreshCtrl.loadComplete();
+    }
+  }
+
+  /// 最多显示2条
+  List<T> subList<T>(List<T> list) => list.sublist(0, list.length > 2 ? 2 : list.length).toList();
+
+  String calContent(Message message) => IMUtils.calContent(
+    content: IMUtils.parseMsg(message, replaceIdToNickname: true),
+    key: searchKey,
+    style: Styles.ts_8E9AB0_14sp,
+    usedWidth: 80.w + 26.w,
+  );
+
+  void viewUserProfile(UserInfo info) => AppNavigator.startUserProfilePane(
+    userID: info.userID!,
+    nickname: info.nickname,
+    faceURL: info.faceURL,
+  );
+
+  void viewFile(Message message) => IMUtils.previewFile(message);
+
+  void viewGroup(GroupInfo groupInfo) {
+    conversationLogic.toChat(
+      groupID: groupInfo.groupID,
+      nickname: groupInfo.groupName,
+      faceURL: groupInfo.faceURL,
+      sessionType: groupInfo.sessionType,
+    );
+  }
+
+  void viewMessage(SearchResultItems item) {
+    if (item.messageCount! > 1) {
+      AppNavigator.startExpandChatHistory(
+        searchResultItems: item,
+        defaultSearchKey: searchKey,
+      );
+    } else {
+    }
   }
 }
 

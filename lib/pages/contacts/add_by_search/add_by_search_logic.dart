@@ -105,15 +105,6 @@ class AddContactsBySearchLogic extends GetxController {
     return sprintf(StrRes.searchNicknameIs, [userInfo.nickname]);
   }
 
-  String? getShowName(dynamic info) {
-    if (info is UserFullInfo) {
-      return info.nickname;
-    } else if (info is GroupInfo) {
-      return info.groupName;
-    }
-    return null;
-  }
-
   void viewInfo(dynamic info) {
     if (info is UserFullInfo) {
       AppNavigator.startUserProfilePane(
@@ -129,25 +120,99 @@ class AddContactsBySearchLogic extends GetxController {
     }
   }
 
-  String getShowTitle(info) {
-    if (!isSearchUser) {
-      return sprintf(StrRes.searchGroupNicknameIs, [getShowName(info)]);
+
+
+  InlineSpan getMergedMatchedSpan(dynamic info, String searchKey) {
+    final List<InlineSpan> children = [];
+    final keywordLower = searchKey.toLowerCase();
+
+    void tryAddText(String? value, String label) {
+      if (value != null && value.toLowerCase().contains(keywordLower)) {
+        children.add(TextSpan(
+          text: "$label: ",
+          style: Styles.ts_0C1C33_17sp,
+        ));
+        children.addAll(_highlightMatch(value, searchKey));
+        children.add(TextSpan(text: "  ", style: Styles.ts_0C1C33_17sp));
+      }
     }
 
-    UserFullInfo userFullInfo = info;
-    String? tips, content;
-    if (int.tryParse(searchKey) != null) {
-      if (searchKey.length == 11) {
-        tips = StrRes.phoneNumber;
-        content = userFullInfo.phoneNumber ?? searchKey;
-      } else {
-        tips = StrRes.userID;
-        content = userFullInfo.userID;
+    void tryAddList(List<String>? values, String label) {
+      if (values == null || values.isEmpty) return;
+
+      final matched = values.where((e) => e.toLowerCase().contains(keywordLower)).toList();
+      if (matched.isNotEmpty) {
+        children.add(TextSpan(
+          text: "$label: ",
+          style: Styles.ts_0C1C33_17sp,
+        ));
+        for (var i = 0; i < matched.length; i++) {
+          children.addAll(_highlightMatch(matched[i], searchKey));
+          if (i < matched.length - 1) {
+            children.add(TextSpan(text: ', ', style: Styles.ts_0C1C33_17sp));
+          }
+        }
+        children.add(TextSpan(text: "  ", style: Styles.ts_0C1C33_17sp));
       }
-    } else {
-      tips = StrRes.searchNicknameIs;
-      content = getShowName(info);
     }
-    return "$tips:$content";
+
+    if (info is GroupInfo) {
+      if (info.groupName!.toLowerCase().contains(keywordLower)) {
+        children.addAll(_highlightMatch(info.groupName!, searchKey));
+      } else {
+        children.add(TextSpan(text: info.groupName, style: Styles.ts_0C1C33_17sp));
+      }
+      return TextSpan(children: children);
+    }
+
+
+    final UserFullInfo user = info;
+
+    tryAddText(user.nickname, StrRes.nickname);
+    tryAddText(user.phoneNumber, StrRes.phoneNumber);
+    tryAddText(user.enterprise, StrRes.enterpriseName);
+    tryAddList(user.tags, StrRes.tags);
+
+    return TextSpan(children: children);
   }
+
+
+
+
+  List<TextSpan> _highlightMatch(String source, String keyword) {
+    final List<TextSpan> spans = [];
+    final pattern = RegExp(RegExp.escape(keyword), caseSensitive: false);
+    final matches = pattern.allMatches(source);
+
+    if (matches.isEmpty) {
+      spans.add(TextSpan(text: source, style: Styles.ts_0C1C33_17sp));
+      return spans;
+    }
+
+    int lastIndex = 0;
+    for (final match in matches) {
+      if (match.start > lastIndex) {
+        spans.add(TextSpan(
+          text: source.substring(lastIndex, match.start),
+          style: Styles.ts_0C1C33_17sp,
+        ));
+      }
+      spans.add(TextSpan(
+        text: source.substring(match.start, match.end),
+        style: Styles.ts_0089FF_17sp, // ← 高亮样式
+      ));
+      lastIndex = match.end;
+    }
+
+    if (lastIndex < source.length) {
+      spans.add(TextSpan(
+        text: source.substring(lastIndex),
+        style: Styles.ts_0C1C33_17sp,
+      ));
+    }
+
+    return spans;
+  }
+
+
 }
