@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,7 +19,7 @@ class AddContactsBySearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TitleBar.back(
-        title: logic.isSearchUser ? StrRes.addFriend : StrRes.addGroup,
+        title: logic.isSearchUser ? StrRes.addFriend : (logic.isUserDiscovery? StrRes.userDiscovery:StrRes.addGroup),
       ),
       backgroundColor: Styles.c_FFFFFF,
       body: Column(
@@ -25,7 +27,7 @@ class AddContactsBySearchPage extends StatelessWidget {
           SearchBox(
             focusNode: logic.focusNode,
             controller: logic.searchCtrl,
-            hintText: logic.isSearchUser ? StrRes.searchUsers : StrRes.searchIDAddGroup,
+            hintText: logic.isSearchUser || logic.isUserDiscovery ? StrRes.searchUsers : StrRes.searchIDAddGroup,
             enabled: true,
             autofocus: true,
             margin: EdgeInsets.symmetric(horizontal: 17.w, vertical: 10.h),
@@ -59,7 +61,7 @@ class AddContactsBySearchPage extends StatelessWidget {
               ),
             ),
           Obx(() => Expanded(
-                child: logic.isSearchUser
+                child: logic.isSearchUser||logic.isUserDiscovery
                     ? (logic.isNotFoundUser ? _buildNotFoundView() : _buildUserListView())
                     : (logic.isNotFoundGroup
                         ? _buildNotFoundView()
@@ -96,18 +98,54 @@ class AddContactsBySearchPage extends StatelessWidget {
               bottom: BorderSide(color: Styles.c_E8EAEF, width: 1.h),
             ),
           ),
-          height: 49.h,
+          height: 68.h,
           child: Row(
             children: [
-              (logic.isSearchUser ? ImageRes.searchPersonIcon : ImageRes.searchGroupIcon).toImage
-                ..width = 24.w
-                ..height = 24.h,
+                AvatarView(
+                url: logic.getAvatar(info),
+                text: logic.getNickname(info),
+                width: 48.w,
+                height: 48.h,
+                textStyle: Styles.ts_FFFFFF_14sp,
+              ),
+
               12.horizontalSpace,
               Expanded(
-                child: RichText(
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  text: logic.getMergedMatchedSpan(info, logic.searchKey),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 第一行：昵称
+                    Text(
+                      logic.getNickname(info),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    // 第二行：匹配字段
+                    logic.searchKey.isNotEmpty ?
+                    Text.rich(
+                      logic.getMergedMatchedSpan(info, logic.searchKey),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey[600],
+                      ),
+                    ): Text(
+                      logic.getEnterpriseName(info),
+                      style: Styles.ts_8E9AB0_14sp,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+
+                  ],
                 ),
               ),
             ],
@@ -119,6 +157,8 @@ class AddContactsBySearchPage extends StatelessWidget {
 
   Widget _buildNotFoundView() => Container(
         padding: EdgeInsets.symmetric(vertical: 12.h),
-        child: (logic.isSearchUser ? StrRes.noFoundUser : StrRes.noFoundGroup).toText..style = Styles.ts_8E9AB0_17sp,
+        child: (logic.isSearchUser || logic.isUserDiscovery? StrRes.noFoundUser : StrRes.noFoundGroup).toText..style = Styles.ts_8E9AB0_17sp,
       );
 }
+
+

@@ -10,6 +10,7 @@ import 'package:sprintf/sprintf.dart';
 enum SearchType {
   user,
   group,
+  userDiscovery
 }
 
 class AddContactsBySearchLogic extends GetxController {
@@ -20,6 +21,8 @@ class AddContactsBySearchLogic extends GetxController {
   final groupInfoList = <GroupInfo>[].obs;
   late SearchType searchType;
   int pageNo = 0;
+  bool isSearched = false;
+
 
   @override
   void onClose() {
@@ -34,14 +37,28 @@ class AddContactsBySearchLogic extends GetxController {
     searchCtrl.addListener(() {
       if (searchKey.isEmpty) {
         focusNode.requestFocus();
-        userInfoList.clear();
+        if (isSearchUser) {
+          userInfoList.clear();
+        }
         groupInfoList.clear();
+        if (isUserDiscovery) {
+          if (isSearched) {
+            userInfoList.clear();
+            getFirstPageUsers();
+            isSearched = false;
+          }
+        }
       }
     });
+    if (isUserDiscovery) {
+      getFirstPageUsers();
+    }
     super.onInit();
   }
 
   bool get isSearchUser => searchType == SearchType.user;
+
+  bool get isUserDiscovery => searchType == SearchType.userDiscovery;
 
   String get searchKey => searchCtrl.text.trim();
 
@@ -49,10 +66,15 @@ class AddContactsBySearchLogic extends GetxController {
 
   bool get isNotFoundGroup => groupInfoList.isEmpty && searchKey.isNotEmpty;
 
+
+
+
+
   void search() {
     if (searchKey.isEmpty) return;
-    if (isSearchUser) {
+    if (isSearchUser||isUserDiscovery) {
       searchUser();
+      isSearched = true;
     } else {
       searchGroup();
     }
@@ -75,7 +97,26 @@ class AddContactsBySearchLogic extends GetxController {
     }
   }
 
+  void getFirstPageUsers() async {
+    var list = await LoadingView.singleton.wrap(
+      asyncFunction: () => Apis.searchUserFullInfo(
+        pageNumber: pageNo = 1,
+        showNumber: 20,
+      ),
+    );
+    userInfoList.assignAll(list ?? []);
+    refreshCtrl.refreshCompleted();
+    if (null == list || list.isEmpty || list.length < 20) {
+      refreshCtrl.loadNoData();
+    } else {
+      refreshCtrl.loadComplete();
+    }
+  }
+
   void loadMoreUser() async {
+    if (userInfoList.isEmpty) {
+      return;
+    }
     var list = await LoadingView.singleton.wrap(
       asyncFunction: () => Apis.searchUserFullInfo(
         content: searchKey,
@@ -99,11 +140,6 @@ class AddContactsBySearchLogic extends GetxController {
     groupInfoList.assignAll(list);
   }
 
-  String getMatchContent(UserFullInfo userInfo) {
-    final keyword = searchCtrl.text;
-
-    return sprintf(StrRes.searchNicknameIs, [userInfo.nickname]);
-  }
 
   void viewInfo(dynamic info) {
     if (info is UserFullInfo) {
@@ -120,6 +156,42 @@ class AddContactsBySearchLogic extends GetxController {
     }
   }
 
+  String getAvatar(dynamic info) {
+    if (info is UserFullInfo) {
+      return info.faceURL ?? '';
+    } else if (info is GroupInfo) {
+      return info.faceURL ?? '';
+    }
+    return '';
+  }
+
+  String getNickname(dynamic info) {
+    if (info is UserFullInfo) {
+      return info.nickname ?? '';
+    } else if (info is GroupInfo) {
+      return info.groupName ?? '';
+    }
+    return '';
+  }
+
+  String getEnterpriseName(dynamic info) {
+    String enterpriseName = '';
+
+    // 获取企业名称
+    if (info is UserFullInfo) {
+      enterpriseName = info.enterprise ?? '';
+    }
+
+    // 长度处理
+    if (enterpriseName.length > 15) {
+      return '${enterpriseName.substring(0, 15)}...'; // 截取前10个字符加省略符
+    }
+
+    return enterpriseName; // 10个字符以内直接返回
+  }
+
+
+
 
 
   InlineSpan getMergedMatchedSpan(dynamic info, String searchKey) {
@@ -130,10 +202,10 @@ class AddContactsBySearchLogic extends GetxController {
       if (value != null && value.toLowerCase().contains(keywordLower)) {
         children.add(TextSpan(
           text: "$label: ",
-          style: Styles.ts_0C1C33_17sp,
+          style: Styles.ts_0C1C33_14sp,
         ));
         children.addAll(_highlightMatch(value, searchKey));
-        children.add(TextSpan(text: "  ", style: Styles.ts_0C1C33_17sp));
+        children.add(TextSpan(text: "  ", style: Styles.ts_0C1C33_14sp));
       }
     }
 
@@ -144,15 +216,15 @@ class AddContactsBySearchLogic extends GetxController {
       if (matched.isNotEmpty) {
         children.add(TextSpan(
           text: "$label: ",
-          style: Styles.ts_0C1C33_17sp,
+          style: Styles.ts_0C1C33_14sp,
         ));
         for (var i = 0; i < matched.length; i++) {
           children.addAll(_highlightMatch(matched[i], searchKey));
           if (i < matched.length - 1) {
-            children.add(TextSpan(text: ', ', style: Styles.ts_0C1C33_17sp));
+            children.add(TextSpan(text: ', ', style: Styles.ts_0C1C33_14sp));
           }
         }
-        children.add(TextSpan(text: "  ", style: Styles.ts_0C1C33_17sp));
+        children.add(TextSpan(text: "  ", style: Styles.ts_0C1C33_14sp));
       }
     }
 
@@ -160,18 +232,18 @@ class AddContactsBySearchLogic extends GetxController {
       if (info.groupName!.toLowerCase().contains(keywordLower)) {
         children.addAll(_highlightMatch(info.groupName!, searchKey));
       } else {
-        children.add(TextSpan(text: info.groupName, style: Styles.ts_0C1C33_17sp));
+        children.add(TextSpan(text: info.groupName, style: Styles.ts_0C1C33_14sp));
       }
       return TextSpan(children: children);
     }
 
 
     final UserFullInfo user = info;
-
-    tryAddText(user.nickname, StrRes.nickname);
-    tryAddText(user.phoneNumber, StrRes.phoneNumber);
     tryAddText(user.enterprise, StrRes.enterpriseName);
     tryAddList(user.tags, StrRes.tags);
+    tryAddText(user.phoneNumber, StrRes.mobile);
+    tryAddText(user.nickname, StrRes.nickname);
+
 
     return TextSpan(children: children);
   }
@@ -185,7 +257,7 @@ class AddContactsBySearchLogic extends GetxController {
     final matches = pattern.allMatches(source);
 
     if (matches.isEmpty) {
-      spans.add(TextSpan(text: source, style: Styles.ts_0C1C33_17sp));
+      spans.add(TextSpan(text: source, style: Styles.ts_0C1C33_14sp));
       return spans;
     }
 
@@ -194,12 +266,12 @@ class AddContactsBySearchLogic extends GetxController {
       if (match.start > lastIndex) {
         spans.add(TextSpan(
           text: source.substring(lastIndex, match.start),
-          style: Styles.ts_0C1C33_17sp,
+          style: Styles.ts_0C1C33_14sp,
         ));
       }
       spans.add(TextSpan(
         text: source.substring(match.start, match.end),
-        style: Styles.ts_0089FF_17sp, // ← 高亮样式
+        style: Styles.ts_0089FF_14sp, // ← 高亮样式
       ));
       lastIndex = match.end;
     }
@@ -207,12 +279,29 @@ class AddContactsBySearchLogic extends GetxController {
     if (lastIndex < source.length) {
       spans.add(TextSpan(
         text: source.substring(lastIndex),
-        style: Styles.ts_0C1C33_17sp,
+        style: Styles.ts_0C1C33_14sp,
       ));
     }
 
     return spans;
   }
 
+  bool isTextSpanEmpty(TextSpan span) {
+    // 基础判断：当前节点的 text 是否非空
+    if (span.text?.isNotEmpty == true) return false;
 
+    // 递归检查子节点
+    if (span.children != null) {
+      for (final child in span.children!) {
+        if (child is TextSpan && !isTextSpanEmpty(child)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 }
+
+
+

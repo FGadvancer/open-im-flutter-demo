@@ -73,6 +73,7 @@ class MinePage extends StatelessWidget {
               width: 48.w,
               height: 48.h,
               textStyle: Styles.ts_FFFFFF_14sp,
+              enabledPreview: true,
             ),
             10.horizontalSpace,
             Expanded(

@@ -32,8 +32,12 @@ class EditTagsPage extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), // 设置内边距
                   decoration: BoxDecoration(
-                    color: Colors.blue[100], // 统一背景色
-                    borderRadius: BorderRadius.circular(12), // 统一圆角
+                    color: Styles.c_F8F9FA, // 统一背景色
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.blueGrey[300]!, // 边框颜色更清晰
+                      width: 1, // 边框宽度
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min, // 让子元素自适应大小

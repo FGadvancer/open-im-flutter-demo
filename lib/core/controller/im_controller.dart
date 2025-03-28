@@ -136,7 +136,7 @@ class IMController extends GetxController with IMCallback, OpenIMLive {
           onSyncServerFinish: (reInstall) {
             imSdkStatus(IMSdkStatus.syncEnded, reInstall: reInstall ?? false);
             if (Platform.isAndroid) {
-              Permissions.request([Permission.systemAlertWindow]);
+              // Permissions.request([Permission.systemAlertWindow]);
             }
           },
           onSyncServerStart: (reInstall) {

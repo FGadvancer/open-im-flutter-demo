@@ -36,7 +36,7 @@ class EditMyInfoLogic extends GetxController {
   _initAttr() {
     switch (editAttr) {
       case EditAttr.nickname:
-        title = StrRes.name;
+        title = StrRes.nickname;
         defaultValue = imLogic.userInfo.value.nickname;
         keyboardType = TextInputType.text;
         break;

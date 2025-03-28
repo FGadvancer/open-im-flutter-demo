@@ -39,6 +39,7 @@ class ConversationPage extends StatelessWidget {
                       height: 42.h,
                       text: im.userInfo.value.nickname,
                       url: im.userInfo.value.faceURL,
+                      enabledPreview: true,
                     ),
                     10.horizontalSpace,
                     if (null != im.userInfo.value.nickname)

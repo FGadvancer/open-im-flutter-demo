@@ -17,7 +17,6 @@ class SetPasswordLogic extends GetxController {
   final pwdCtrl = TextEditingController();
   final pwdAgainCtrl = TextEditingController();
   final enterpriseNameCtrl = TextEditingController();
-  final websiteCtrl = TextEditingController();
   final enabled = false.obs;
   final selectedGender = 1.obs;
   final faceURL = ''.obs; // 服务器上的头像 URL
@@ -53,7 +52,6 @@ class SetPasswordLogic extends GetxController {
     pwdCtrl.addListener(_onChanged);
     pwdAgainCtrl.addListener(_onChanged);
     enterpriseNameCtrl.addListener(_onChanged);
-    websiteCtrl.addListener(_onChanged);
     super.onInit();
   }
 
@@ -84,10 +82,6 @@ class SetPasswordLogic extends GetxController {
     }
     if (!IMUtils.isValidEnterpriseName(enterpriseNameCtrl.text.trim())) {
       IMViews.showToast(StrRes.enterpriseNameLengthInvalid); // 提示企业名称长度无效
-      return false;
-    }
-    if (!IMUtils.isValidWebsite(websiteCtrl.text)) {
-      IMViews.showToast(StrRes.plsEnterValidWebsite);
       return false;
     }
     if (selectedAvatarFile.value == null) {
@@ -145,7 +139,7 @@ class SetPasswordLogic extends GetxController {
         password: pwdCtrl.text,
         verificationCode: verificationCode,
         invitationCode: invitationCode,
-        gender: selectedGender.value, enterpriseName: enterpriseNameCtrl.text, website: websiteCtrl.text,
+        gender: selectedGender.value, enterpriseName: enterpriseNameCtrl.text,
       );
       if (null == IMUtils.emptyStrToNull(data.imToken) || null == IMUtils.emptyStrToNull(data.chatToken)) {
         AppNavigator.startLogin();

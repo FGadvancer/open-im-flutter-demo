@@ -65,7 +65,7 @@ class Apis {
     required String nickname,
     required String password,
     required String enterpriseName,
-    required String website,
+    String? website,
     String? faceURL,
     String? areaCode,
     String? phoneNumber,
@@ -304,7 +304,7 @@ class Apis {
   }
 
   static Future<List<UserFullInfo>?> searchUserFullInfo({
-    required String content,
+    String? content,
     int pageNumber = 1,
     int showNumber = 10,
   }) async {
@@ -316,6 +316,7 @@ class Apis {
           'keyword': content,
         },
         options: chatTokenOptions,
+        showErrorToast: false,
       );
       if (data['users'] is List) {
         return (data['users'] as List).map((e) => UserFullInfo.fromJson(e)).toList();

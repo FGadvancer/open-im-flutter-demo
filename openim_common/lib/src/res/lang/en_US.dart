@@ -211,6 +211,7 @@ const Map<String, String> en_US = {
   "createGroup": "Create Group",
   "createGroupHint": "Create a group, fully utilize LarkTower",
   "addGroup": "Add Group",
+  "userDiscovery": "User Discovery",
   "addGroupHint": "Ask the admin or members for the ID",
   "searchIDAddFriend": "Search ID to Add Friend",
   "searchIDAddGroup": "Search ID to Add Group",

@@ -438,6 +438,8 @@ class StrRes {
 
   static String get addGroup => 'addGroup'.tr;
 
+  static String get userDiscovery => 'userDiscovery'.tr;
+
   static String get addGroupHint => 'addGroupHint'.tr;
 
   static String get searchIDAddFriend => 'searchIDAddFriend'.tr;

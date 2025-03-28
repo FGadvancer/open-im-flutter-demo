@@ -34,7 +34,7 @@ class MyInfoPage extends StatelessWidget {
                       onTap: logic.openPhotoSheet,
                     ),
                     _buildItemView(
-                      label: StrRes.name,
+                      label: StrRes.nickname,
                       value: imLogic.userInfo.value.nickname,
                       onTap: logic.editMyName,
                     ),
@@ -128,8 +128,8 @@ class MyInfoPage extends StatelessWidget {
               const Spacer(),
               if (isAvatar)
                 AvatarView(
-                  width: 32.w,
-                  height: 32.h,
+                  width: 48.w,
+                  height: 48.h,
                   url: url,
                   text: value,
                   textStyle: Styles.ts_FFFFFF_10sp,
@@ -184,8 +184,12 @@ class MyInfoPage extends StatelessWidget {
                     return Container(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
-                        color: Colors.blue[100], // 统一背景色
+                        color: Styles.c_F8F9FA, // 统一背景色
                         borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.blueGrey[300]!, // 边框颜色更清晰
+                          width: 1, // 边框宽度
+                        ),
                       ),
                       child: Text(
                         tag,

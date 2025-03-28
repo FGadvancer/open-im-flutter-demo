@@ -44,6 +44,11 @@ class ContactsPage extends StatelessWidget {
                 label: StrRes.myGroup,
                 onTap: logic.myGroup,
               ),
+              _buildItemView(
+                assetsName: ImageRes.searchPersonIcon,
+                label:  "左邻右舍",
+                onTap: logic.userDiscovery,
+              ),
             ],
           ),
         ),

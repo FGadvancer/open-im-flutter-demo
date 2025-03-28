@@ -20,13 +20,24 @@ class RegisterBgView extends StatelessWidget {
               children: [
                 54.verticalSpace,
                 Padding(
-                  padding: EdgeInsets.only(left: 22.w),
-                  child: ImageRes.backBlack.toImage
-                    ..width = 24.w
-                    ..height = 24.h
-                    ..onTap = () => Get.back(),
+                  padding: EdgeInsets.symmetric(horizontal: 22.w), // 左右统一间距
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右分散对齐
+                    children: [
+                      // 返回按钮（左）
+                      ImageRes.backBlack.toImage
+                        ..width = 24.w
+                        ..height = 24.h
+                        ..onTap = () => Get.back(),
+
+                      // // 新增图片（右）
+                      // ImageRes.loginLogo.toImage // 替换为你的图片资源
+                      //   ..width = 24.w
+                      //   ..height = 24.h
+                    ],
+                  ),
                 ),
-                38.verticalSpace,
+                25.verticalSpace,
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 32.w),
                   child: child,

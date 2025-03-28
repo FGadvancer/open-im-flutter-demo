@@ -349,6 +349,7 @@ class ChatLogic extends SuperController {
       _debounce = Timer(1.seconds, () {
         sendTypingMsg(focus: false);
       });
+      // _updateDartText(createDraftText());
     });
 
     focusNode.addListener(() {
@@ -1038,6 +1039,18 @@ class ChatLogic extends SuperController {
     }
   }
 
+  /// 生成草稿draftText
+  // String createDraftText() {
+  //   var atMap = <String, dynamic>{};
+  //   for (var uid in curMsgAtUser) {
+  //     atMap[uid] = atUserNameMappingMap[uid];
+  //   }
+  //   if (inputCtrl.text.isEmpty) {
+  //     return "";
+  //   }
+  //   return json.encode({'text': inputCtrl.text, 'at': atMap});
+  // }
+
   exit() async {
     if (isShowPopMenu.value) {
       forceCloseMenuSub.add(true);
@@ -1047,6 +1060,13 @@ class ChatLogic extends SuperController {
 
     return true;
   }
+
+  // void _updateDartText(String text) {
+  //   conversationLogic.updateDartText(
+  //     text: text,
+  //     conversationID: conversationInfo.conversationID,
+  //   );
+  // }
 
   void focusNodeChanged(bool hasFocus) {
     _changeInputStatus(hasFocus);

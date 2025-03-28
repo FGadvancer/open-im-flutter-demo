@@ -18,12 +18,6 @@ class SetPasswordPage extends StatelessWidget {
           children: [
             StrRes.setInfo.toText..style = Styles.ts_0089FF_22sp_semibold,
             29.verticalSpace,
-            InputBox(
-              label: StrRes.nickname,
-              hintText: StrRes.plsEnterYourNickname,
-              controller: logic.nicknameCtrl,
-            ),
-            17.verticalSpace,
             // 头像上传组件
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,6 +60,13 @@ class SetPasswordPage extends StatelessWidget {
                 ),
               ],
             ),
+            10.verticalSpace,
+            InputBox(
+              label: StrRes.nickname,
+              hintText: StrRes.plsEnterYourNickname,
+              controller: logic.nicknameCtrl,
+            ),
+
 
 
 
@@ -75,19 +76,14 @@ class SetPasswordPage extends StatelessWidget {
             //   value: logic.isMale? StrRes.man : StrRes.woman,
             //   onTap: logic.selectGender,
             // ),
-            17.verticalSpace,
+            10.verticalSpace,
             InputBox(
               label: StrRes.enterpriseName,
               hintText: StrRes.plsEnterEnterpriseName,
               controller: logic.enterpriseNameCtrl,
+              formatHintText: "10~20位，（例如：深圳市xxx有限责任公司）" ,
             ),
-            17.verticalSpace,
-            InputBox(
-              label: StrRes.website,
-              hintText: StrRes.plsEnterWebsite,
-              controller: logic.websiteCtrl,
-            ),
-            17.verticalSpace,
+            10.verticalSpace,
             InputBox.password(
               label: StrRes.password,
               hintText: StrRes.plsEnterPassword,
@@ -95,7 +91,7 @@ class SetPasswordPage extends StatelessWidget {
               formatHintText: StrRes.loginPwdFormat,
               inputFormatters: [IMUtils.getPasswordFormatter()],
             ),
-            17.verticalSpace,
+            10.verticalSpace,
 
             InputBox.password(
               label: StrRes.confirmPassword,

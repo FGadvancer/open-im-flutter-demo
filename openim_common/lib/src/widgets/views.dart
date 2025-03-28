@@ -151,7 +151,8 @@ class IMViews {
       List<SheetItem> items = const [],
       int quality = 80}) {
     bool allowSendImageTypeHelper(String? mimeType) {
-      final result = mimeType?.contains('png') == true || mimeType?.contains('jpeg') == true;
+      final result = mimeType?.contains('png') == true
+          || mimeType?.contains('jpeg') == true|| mimeType?.contains('gif') == true;
 
       return result;
     }

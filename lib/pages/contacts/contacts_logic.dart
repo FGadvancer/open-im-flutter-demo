@@ -6,6 +6,7 @@ import 'package:openim_common/openim_common.dart';
 
 import '../../core/controller/im_controller.dart';
 import '../home/home_logic.dart';
+import 'add_by_search/add_by_search_logic.dart';
 import 'select_contacts/select_contacts_logic.dart';
 
 class ContactsLogic extends GetxController
@@ -43,6 +44,7 @@ class ContactsLogic extends GetxController
   void myFriend() => AppNavigator.startFriendList();
 
   void myGroup() => AppNavigator.startGroupList();
+  void userDiscovery() => AppNavigator.startAddContactsBySearch(searchType: SearchType.userDiscovery);
 
   void searchContacts() => AppNavigator.startGlobalSearch();
 

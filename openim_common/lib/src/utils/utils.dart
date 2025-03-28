@@ -1689,8 +1689,8 @@ class IMUtils {
 
 
   static bool isValidEnterpriseName(String enterpriseName) {
-    const int minLength = 2;
-    const int maxChineseLength = 16;
+    const int minLength = 10;
+    const int maxChineseLength = 20;
     const int maxEnglishLength = 32;
 
 
