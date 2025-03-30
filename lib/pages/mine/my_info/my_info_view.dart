@@ -51,15 +51,20 @@ class MyInfoPage extends StatelessWidget {
                       ),
                       onTap: logic.openDatePicker,
                     ),
+                    _buildItemView(
+                      label: StrRes.mobile,
+                      value: imLogic.userInfo.value.phoneNumber,
+                      showRightArrow: false,
+                    ),
                   ],
                 ),
                 10.verticalSpace,
                 _buildCornerBgView(
                   children: [
                     _buildItemView(
-                      label: StrRes.mobile,
-                      value: imLogic.userInfo.value.phoneNumber,
-                      showRightArrow: false,
+                      label: StrRes.contactInfo,
+                      value: imLogic.userInfo.value.contactInfo,
+                      onTap: logic.editContactInfo,
                     ),
                     _buildItemView(
                       label: StrRes.email,

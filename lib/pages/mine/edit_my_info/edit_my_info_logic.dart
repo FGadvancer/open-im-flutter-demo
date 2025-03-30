@@ -13,6 +13,7 @@ enum EditAttr {
   email,
   enterprise,
   enterpriseWebsite,
+  contactInfo,
 }
 
 class EditMyInfoLogic extends GetxController {
@@ -61,6 +62,11 @@ class EditMyInfoLogic extends GetxController {
       case EditAttr.enterpriseWebsite:
         title = StrRes.website;
         defaultValue = imLogic.userInfo.value.enterpriseWebsite;
+        keyboardType = TextInputType.text;
+        break;
+      case EditAttr.contactInfo:
+        title = StrRes.contactInfo;
+        defaultValue = imLogic.userInfo.value.contactInfo;
         keyboardType = TextInputType.text;
         break;
     }
@@ -133,6 +139,16 @@ class EditMyInfoLogic extends GetxController {
       );
       imLogic.userInfo.update((val) {
         val?.enterpriseWebsite = value;
+      });
+    }else if (editAttr == EditAttr.contactInfo) {
+      await LoadingView.singleton.wrap(
+        asyncFunction: () => Apis.updateUserInfo(
+          userID: OpenIM.iMManager.userID,
+          contactInfo: value,
+        ),
+      );
+      imLogic.userInfo.update((val) {
+        val?.contactInfo = value;
       });
     }
     Get.back();

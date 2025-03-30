@@ -196,6 +196,7 @@ class Apis {
     String? faceURL,
     String? enterpriseName,
     String? website,
+    String? contactInfo,
     List<String>? tags,
     bool? clearTags,
     int? gender,
@@ -228,6 +229,7 @@ class Apis {
       put('allowVibration', allowVibration);
       put('enterprise', enterpriseName);
       put('enterpriseWebsite', website);
+      put('contactInfo', contactInfo);
       return HttpUtil.post(
         Urls.updateUserInfo,
         data: {

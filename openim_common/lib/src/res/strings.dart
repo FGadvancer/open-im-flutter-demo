@@ -512,6 +512,8 @@ class StrRes {
 
   static String get mobile => 'mobile'.tr;
 
+  static String get contactInfo => 'contactInfo'.tr;
+
   static String get tags => 'tags'.tr;
 
   static String get email => 'email'.tr;

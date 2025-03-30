@@ -49,7 +49,7 @@ class Config {
 
   static const double textScaleFactor = 1.0;
 
-  static const discoverPageURL = 'https://docs.openim.io/';
+  static const discoverPageURL = 'https://www.yunquetai.com/?download=false';
   static const allowSendMsgNotFriend = '0';
   // amap key
   static const webKey = 'webKey';

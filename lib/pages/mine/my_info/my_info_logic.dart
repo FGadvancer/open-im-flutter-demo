@@ -28,6 +28,10 @@ class MyInfoLogic extends GetxController {
 
   void editEmail() => AppNavigator.startEditMyInfo(attr: EditAttr.email, maxLength: 30);
 
+  void editContactInfo() => AppNavigator.startEditMyInfo(
+        attr: EditAttr.contactInfo,
+      );
+
   void editEnterpriseName() => AppNavigator.startEditMyInfo(
         attr: EditAttr.enterprise,
       );

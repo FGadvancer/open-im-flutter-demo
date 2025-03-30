@@ -92,6 +92,8 @@ class PersonalInfoLogic extends GetxController {
 
   String? get enterpriseWebsite => IMUtils.emptyStrToNull(userFullInfo.value.enterpriseWebsite) ?? '-';
 
+  String? get contactInfo => IMUtils.emptyStrToNull(userFullInfo.value.contactInfo) ?? '-';
+
   List<String>? get tags => userFullInfo.value.tags;
 
   clickPhoneNumber() => _callSystemPhone(userFullInfo.value.phoneNumber);

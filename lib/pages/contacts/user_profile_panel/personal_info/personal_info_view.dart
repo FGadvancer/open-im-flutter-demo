@@ -37,9 +37,8 @@ class PersonalInfoPage extends StatelessWidget {
                   value: logic.nickname,
                 ),
                 _buildItemView(
-                  label: StrRes.mobile,
-                  value: logic.phoneNumber,
-                  onTap: logic.clickPhoneNumber,
+                  label: StrRes.contactInfo,
+                  value: logic.contactInfo,
                 ),
                 _buildItemView(
                   label: StrRes.email,

@@ -28,6 +28,7 @@ class UserFullInfo {
   String? position;
   String? enterpriseWebsite;
   List<String>? tags;
+  String? contactInfo;
   bool isFriendship = false;
   bool isBlacklist = false;
   List<DepartmentInfo>? departmentList;
@@ -100,6 +101,7 @@ class UserFullInfo {
     enterprise = json['enterprise'];
     enterpriseWebsite = json['enterpriseWebsite'];
     tags = json['tags'] == null ? null : List<String>.from(json['tags']);
+    contactInfo = json['contactInfo'];
     isFriendship = json['isFriendship'] ?? false;
     isBlacklist = json['isBlacklist'] ?? false;
     departmentList = json['departmentList'] == null

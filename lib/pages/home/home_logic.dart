@@ -6,6 +6,7 @@ import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:openim_common/openim_common.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../core/controller/app_controller.dart';
@@ -24,6 +25,8 @@ class HomeLogic extends SuperController {
   final unhandledFriendApplicationCount = 0.obs;
   final unhandledGroupApplicationCount = 0.obs;
   final unhandledCount = 0.obs;
+  final PersistentTabController _tabController = PersistentTabController(initialIndex: 0);
+  PersistentTabController get tabController => _tabController;
   String? _lockScreenPwd;
   bool _isShowScreenLock = false;
   bool? _isAutoLogin;

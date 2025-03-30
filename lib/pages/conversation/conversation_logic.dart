@@ -150,11 +150,38 @@ class ConversationLogic extends GetxController {
   }
 
   String? getPrefixTag(ConversationInfo info) {
-    if (info.groupAtType == GroupAtType.groupNotification) {
-      return '[${StrRes.groupAc}]';
+    String? prefix;
+    try {
+      // 草稿
+      if (null != info.draftText && '' != info.draftText) {
+        var map = json.decode(info.draftText!);
+        String text = map['text'];
+        if (text.isNotEmpty) {
+          prefix = '[${StrRes.draftText}]';
+        }
+      } else {
+        switch (info.groupAtType) {
+          case GroupAtType.atAll:
+            prefix = '[@${StrRes.everyone}]';
+            break;
+          case GroupAtType.atAllAtMe:
+            prefix = '[@${StrRes.everyone} @${StrRes.you}]';
+            break;
+          case GroupAtType.atMe:
+            prefix = '[${StrRes.someoneMentionYou}]';
+            break;
+          case GroupAtType.atNormal:
+            break;
+          case GroupAtType.groupNotification:
+            prefix = '[${StrRes.groupAc}]';
+            break;
+        }
+      }
+    } catch (e, s) {
+      Logger.print('e: $e  s: $s');
     }
 
-    return null;
+    return prefix;
   }
 
   String getContent(ConversationInfo info) {
@@ -217,6 +244,16 @@ class ConversationLogic extends GetxController {
   }
 
   bool isUserGroup(int index) => list.elementAt(index).isGroupChat;
+
+
+  /// 草稿
+  /// 聊天页调用，不通过onWillPop事件返回，因为该事件会拦截ios的左滑返回上一页。
+  void updateDartText({
+    String? conversationID,
+    required String text,
+  }) {
+    if (null != conversationID) tempDraftText[conversationID] = text;
+  }
 
   void _markMessageHasRead(
     ConversationInfo conversation,
@@ -407,16 +444,20 @@ class ConversationLogic extends GetxController {
 
     if (await _jumpOANtf(conversationInfo)) return;
 
+    updateDartText(
+      conversationID: conversationInfo.conversationID,
+      text: conversationInfo.draftText ?? '',
+    );
     await AppNavigator.startChat(
       offUntilHome: offUntilHome,
       draftText: conversationInfo.draftText,
       conversationInfo: conversationInfo,
       searchMessage: searchMessage,
     );
-
     var newDraftText = tempDraftText[conversationInfo.conversationID];
 
     _markMessageHasRead(conversationInfo);
+
 
     _setupDraftText(
       conversationID: conversationInfo.conversationID,

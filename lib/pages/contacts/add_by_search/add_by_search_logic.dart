@@ -241,7 +241,6 @@ class AddContactsBySearchLogic extends GetxController {
     final UserFullInfo user = info;
     tryAddText(user.enterprise, StrRes.enterpriseName);
     tryAddList(user.tags, StrRes.tags);
-    tryAddText(user.phoneNumber, StrRes.mobile);
     tryAddText(user.nickname, StrRes.nickname);
 
 
