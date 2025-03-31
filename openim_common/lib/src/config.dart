@@ -49,7 +49,7 @@ class Config {
 
   static const double textScaleFactor = 1.0;
 
-  static const discoverPageURL = 'https://www.yunquetai.com/?download=false';
+  static const discoverPageURL = 'https://www.yunquetai.com/?embedApp=true';
   static const allowSendMsgNotFriend = '0';
   // amap key
   static const webKey = 'webKey';
@@ -65,7 +65,7 @@ class Config {
   static const friendScheme = "io.openim.app/addFriend/";
   static const groupScheme = "io.openim.app/joinGroup/";
 
-  static const _host = "101.42.151.19";
+  static const _host = "yunquetai.com";
 
   static const _ipRegex = '((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)';
 

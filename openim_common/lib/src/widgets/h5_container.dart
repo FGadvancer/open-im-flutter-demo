@@ -9,7 +9,17 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+class H5ContainerLogic extends GetxController {
+  late WebViewController webController;
 
+  Future<bool> handleWebViewBack() async {
+    if (await webController.canGoBack()) {
+      webController.goBack();
+      return true; // 已处理返回
+    }
+    return false; // 未处理，允许退出
+  }
+}
 class H5Container extends StatefulWidget {
   const H5Container({super.key, required this.url, this.title});
 
@@ -72,6 +82,7 @@ class ErrorConfig {
 
 
 class _H5ContainerState extends State<H5Container> {
+  final logic = Get.put(H5ContainerLogic());
   late final WebViewController _controller;
   bool _isError = false;
   bool _hasPageFinished = false;
@@ -166,6 +177,7 @@ class _H5ContainerState extends State<H5Container> {
       (controller.platform as AndroidWebViewController).setMediaPlaybackRequiresUserGesture(false);
     }
 
+    logic.webController= controller;
     _controller = controller;
   }
 
@@ -189,13 +201,6 @@ class _H5ContainerState extends State<H5Container> {
     });
   }
 
-  Future<bool> _handleWebViewBack() async {
-    if (await _controller.canGoBack()) {
-      _controller.goBack();
-      return true;
-    }
-    return false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -219,8 +224,7 @@ class _H5ContainerState extends State<H5Container> {
                   : const SizedBox(),
             ],
           ),
-
-    );
+      );
   }
 
   // Widget _buildErrorView() {

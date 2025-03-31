@@ -80,6 +80,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Styles.c_FFFFFF,
       body: Obx(
         () => PersistentTabView(
+          handleAndroidBackButtonPress:false ,
           tabs: _tabs(),
           navBarBuilder: (navBarConfig) => Style1BottomNavBar(
             navBarConfig: navBarConfig,

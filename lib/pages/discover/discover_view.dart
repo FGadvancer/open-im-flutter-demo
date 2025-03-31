@@ -11,11 +11,18 @@ class DiscoverPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+      WillPopScope(
+        onWillPop: () async {
+      final h5Controller = Get.find<H5ContainerLogic>();
+      return !(await h5Controller.handleWebViewBack());
+    },
+    child: Scaffold(
       appBar: TitleBar.workbench(),
       backgroundColor: Styles.c_F8F9FA,
       body: _buildBody(),
-    );
+    )
+      );
   }
 
   Widget _buildBody() {
