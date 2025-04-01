@@ -20,13 +20,11 @@ class HomeLogic extends SuperController {
   final imLogic = Get.find<IMController>();
   final cacheLogic = Get.find<CacheController>();
   final initLogic = Get.find<AppController>();
-  final index = 0.obs;
+  final currentIndex = 0.obs;
   final unreadMsgCount = 0.obs;
   final unhandledFriendApplicationCount = 0.obs;
   final unhandledGroupApplicationCount = 0.obs;
   final unhandledCount = 0.obs;
-  final PersistentTabController _tabController = PersistentTabController(initialIndex: 0);
-  PersistentTabController get tabController => _tabController;
   String? _lockScreenPwd;
   bool _isShowScreenLock = false;
   bool? _isAutoLogin;
@@ -36,8 +34,9 @@ class HomeLogic extends SuperController {
 
   Function()? onScrollToUnreadMessage;
 
+
   switchTab(index) {
-    this.index.value = index;
+    currentIndex.value = index;
   }
 
   scrollToUnreadMessage() {
