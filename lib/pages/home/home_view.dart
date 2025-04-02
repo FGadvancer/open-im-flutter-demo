@@ -73,7 +73,22 @@ class HomePage extends StatelessWidget {
       SystemNavigator.pop(); // 退出应用
     } else {
       _lastBackTime = now;
-      IMViews.showInfoToast("再按一次返回键退出云雀台",toastPosition: EasyLoadingToastPosition.bottom);
+      // IMViews.showInfoToast("再按一次返回键退出云雀台",toastPosition: EasyLoadingToastPosition.center);
+      // 显示 Toast
+      Get.snackbar(
+        '提示',
+        '再按一次返回键退出云雀台',
+        margin: EdgeInsets.only(bottom: 60), // 根据 Tab 栏高度调整
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 2),
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.easeOut,
+        backgroundColor: Colors.black54,
+        colorText: Colors.white,
+        // 禁止背景点击拦截
+        overlayBlur: 0,
+      );
     }
   }
 
