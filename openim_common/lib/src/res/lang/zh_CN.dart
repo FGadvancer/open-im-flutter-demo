@@ -207,7 +207,7 @@ const Map<String, String> zh_CN = {
   "scan": "扫一扫",
   "scanHint": "扫描二维码名片即可添加好友",
   "addFriend": "添加好友",
-  "addFriendHint": "通过ID号搜索添加",
+  "addFriendHint": "通过昵称/机构名称/广播搜索添加",
   "createGroup": "创建群聊",
   "createGroupHint": "创建群聊，全面使用云雀台",
   "addGroup": "添加群聊",

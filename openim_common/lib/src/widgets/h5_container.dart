@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:openim_common/openim_common.dart';
@@ -9,17 +10,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
-class H5ContainerLogic extends GetxController {
-  late WebViewController webController;
 
-  Future<bool> handleWebViewBack() async {
-    if (await webController.canGoBack()) {
-      webController.goBack();
-      return true; // 已处理返回
-    }
-    return false; // 未处理，允许退出
-  }
-}
 class H5Container extends StatefulWidget {
   const H5Container({super.key, required this.url, this.title});
 
@@ -82,7 +73,6 @@ class ErrorConfig {
 
 
 class _H5ContainerState extends State<H5Container> {
-  final logic = Get.put(H5ContainerLogic());
   late final WebViewController _controller;
   bool _isError = false;
   bool _hasPageFinished = false;
@@ -117,6 +107,9 @@ class _H5ContainerState extends State<H5Container> {
           },
           onPageStarted: (String url) {
             debugPrint('Page started loading: $url');
+            if (Platform.isAndroid) {
+              SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+            }
             setState(() {
               _hasPageFinished = false; // 页面开始加载时重置标志
               _isError = false;
@@ -127,6 +120,12 @@ class _H5ContainerState extends State<H5Container> {
             if (!_isError) {
               setState(() => _hasPageFinished = true);
             }
+            if (Platform.isAndroid) {
+              SystemChrome.setEnabledSystemUIMode(
+                SystemUiMode.manual,
+                overlays: SystemUiOverlay.values,
+              );
+            }
           },
           onWebResourceError: (WebResourceError error) {
             debugPrint('''
@@ -136,7 +135,7 @@ class _H5ContainerState extends State<H5Container> {
                errorType: ${error.errorType}
                isForMainFrame: ${error.isForMainFrame}
                ''');
-            _handleError(null);
+            _handleWebResourceError(error);
           },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
@@ -171,13 +170,13 @@ class _H5ContainerState extends State<H5Container> {
     }
 
     if (controller.platform is AndroidWebViewController) {
+      final androidController = controller.platform as AndroidWebViewController;
       AndroidWebViewController.enableDebugging(true);
 
 
       (controller.platform as AndroidWebViewController).setMediaPlaybackRequiresUserGesture(false);
     }
 
-    logic.webController= controller;
     _controller = controller;
   }
 
@@ -189,8 +188,8 @@ class _H5ContainerState extends State<H5Container> {
     final statusCode = error?.response?.statusCode;
     setState(() {
       if (!_isError) {
-          _isError = true;
-          _hasPageFinished = false;
+        _isError = true;
+        _hasPageFinished = false;
       }
       _errorConfig = switch (statusCode) {
         404 => ErrorConfig.notFound404,
@@ -200,31 +199,61 @@ class _H5ContainerState extends State<H5Container> {
       };
     });
   }
+  void _handleWebResourceError(WebResourceError error) {
+    if (!error.isForMainFrame!) return; // 忽略子资源错误
 
+    setState(() {
+      _errorConfig = ErrorConfig.network;
+      _isError = true;
+      _hasPageFinished = false;
+    });
+  }
+
+  Future<bool> _handleWebViewBack() async {
+    if (await _controller.canGoBack()) {
+      _controller.goBack();
+      return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
     Logger.print('H5Container: ${widget.url},${_isError},${_hasPageFinished}');
-    return Scaffold(
-      appBar: widget.title != null ? TitleBar.back(title: widget.title) : null,
-      body:  Stack(
-            children: [
-              Opacity(
-                // 0关闭，1打开
-                opacity: _hasPageFinished? 1 : 0,
-                child: WebViewWidget(controller: _controller),
-              ),
-              if (_isError) _buildErrorView(),
-              progress < 1.0
-                  ? LinearProgressIndicator(
-                value: progress,
-                color: Colors.green,
-                backgroundColor: Styles.c_F8F9FA,
-              )
-                  : const SizedBox(),
-            ],
-          ),
-      );
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          if (!await _handleWebViewBack()&& mounted) {
+            // Navigator.of(context).pop();
+          }
+        }
+      },
+      child:   Scaffold(
+        appBar: widget.title != null ? TitleBar.back(title: widget.title) : null,
+        body:  Stack(
+          children: [
+            Opacity(
+              // 0关闭，1打开
+              opacity: _hasPageFinished? 1 : 0,
+              child: WebViewWidget(controller: _controller),
+            ),
+            if (_isError) _buildErrorView(),
+            progress < 1.0
+                ? LinearProgressIndicator(
+              value: progress,
+              color: Colors.green,
+              backgroundColor: Styles.c_F8F9FA,
+              minHeight: 2,
+            )
+                : const SizedBox(),
+          ],
+        ),
+
+      ),
+
+    );
+
   }
 
   // Widget _buildErrorView() {
@@ -290,14 +319,14 @@ class _H5ContainerState extends State<H5Container> {
 
   Widget _buildRetryButton() {
     return ElevatedButton.icon(
-        icon: const Icon(Icons.refresh, size: 20),
-    label: const Text('重新加载', style: TextStyle(fontSize: 16)),
-    onPressed: () {
-    setState(() {
-      _errorConfig = null;_isError = false;
-    });
-    _controller.reload();
-    },
+      icon: const Icon(Icons.refresh, size: 20),
+      label: const Text('重新加载', style: TextStyle(fontSize: 16)),
+      onPressed: () {
+        setState(() {
+          _errorConfig = null;_isError = false;
+        });
+        _controller.reload();
+      },
     );
   }
 }
