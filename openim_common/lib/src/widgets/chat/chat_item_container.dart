@@ -23,6 +23,7 @@ class ChatItemContainer extends StatelessWidget {
     required this.readingDuration,
     this.menus,
     required this.child,
+    this.quoteView,
     this.popupMenuController,
     this.sendStatusStream,
     this.onTapLeftAvatar,
@@ -47,6 +48,7 @@ class ChatItemContainer extends StatelessWidget {
   final bool showLeftNickname;
   final bool showRightNickname;
   final int readingDuration;
+  final Widget? quoteView;
   final List<MenuInfo>? menus;
   final Widget child;
   final CustomPopupMenuController? popupMenuController;
@@ -79,22 +81,7 @@ class ChatItemContainer extends StatelessWidget {
     );
   }
 
-  Widget _buildChildView(BubbleType type) => (null != menus && menus!.isEmpty)
-      ? isBubbleBg
-          ? ChatBubble(bubbleType: type, child: child)
-          : child
-      : CopyCustomPopupMenu(
-          controller: popupMenuController,
-          menuBuilder: () => ChatLongPressMenu(
-            popupMenuController: popupMenuController,
-            menus: menus ?? allMenus,
-          ),
-          pressType: PressType.longPress,
-          arrowColor: Styles.c_0C1C33_opacity85,
-          barrierColor: Colors.transparent,
-          verticalMargin: 0,
-          child: isBubbleBg ? ChatBubble(bubbleType: type, child: child) : child,
-        );
+
 
   Widget _buildLeftView() => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,6 +112,7 @@ class ChatItemContainer extends StatelessWidget {
                   _buildChildView(BubbleType.receiver),
                 ],
               ),
+              if (null != quoteView) quoteView!,
             ],
           ),
         ],
@@ -159,6 +147,7 @@ class ChatItemContainer extends StatelessWidget {
                   _buildChildView(BubbleType.send),
                 ],
               ),
+              if (null != quoteView) quoteView!,
             ],
           ),
           10.horizontalSpace,
@@ -173,4 +162,21 @@ class ChatItemContainer extends StatelessWidget {
           ),
         ],
       );
+
+  Widget _buildChildView(BubbleType type) => (null != menus && menus!.isEmpty)
+      ? isBubbleBg
+      ? ChatBubble(bubbleType: type, child: child)
+      : child
+      : CopyCustomPopupMenu(
+    controller: popupMenuController,
+    menuBuilder: () => ChatLongPressMenu(
+      popupMenuController: popupMenuController,
+      menus: menus ?? allMenus,
+    ),
+    pressType: PressType.longPress,
+    arrowColor: Styles.c_0C1C33_opacity85,
+    barrierColor: Colors.transparent,
+    verticalMargin: 0,
+    child: isBubbleBg ? ChatBubble(bubbleType: type, child: child) : child,
+  );
 }

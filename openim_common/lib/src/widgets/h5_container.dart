@@ -64,7 +64,7 @@ class ErrorConfig {
 
   static ErrorConfig otherHttp(int? statusCode) => ErrorConfig(
     type: ErrorType.otherHttp,
-    icon: Icons.warning,
+    icon: Icons.pets_outlined,
     title: '请求失败 (${statusCode ?? '未知'})',
     subtitle: '请稍后重试或联系管理员',
   );

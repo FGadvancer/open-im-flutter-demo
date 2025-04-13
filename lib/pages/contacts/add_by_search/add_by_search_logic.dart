@@ -177,17 +177,15 @@ class AddContactsBySearchLogic extends GetxController {
   String getEnterpriseName(dynamic info) {
     String enterpriseName = '';
 
-    // 获取企业名称
     if (info is UserFullInfo) {
       enterpriseName = info.enterprise ?? '';
     }
 
-    // 长度处理
     if (enterpriseName.length > 15) {
-      return '${enterpriseName.substring(0, 15)}...'; // 截取前10个字符加省略符
+      return '${enterpriseName.substring(0, 15)}...';
     }
 
-    return enterpriseName; // 10个字符以内直接返回
+    return enterpriseName;
   }
 
 
@@ -270,7 +268,7 @@ class AddContactsBySearchLogic extends GetxController {
       }
       spans.add(TextSpan(
         text: source.substring(match.start, match.end),
-        style: Styles.ts_0089FF_14sp, // ← 高亮样式
+        style: Styles.ts_0089FF_14sp,
       ));
       lastIndex = match.end;
     }

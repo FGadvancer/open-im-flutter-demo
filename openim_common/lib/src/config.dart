@@ -50,7 +50,7 @@ class Config {
   static const double textScaleFactor = 1.0;
 
   static const discoverPageURL = 'https://www.yunquetai.com/?embedApp=true';
-  static const allowSendMsgNotFriend = '0';
+  static const allowSendMsgNotFriend = '1';
   // amap key
   static const webKey = 'webKey';
   static const webServerKey = 'webServerKey';

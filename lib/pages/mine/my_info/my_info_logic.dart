@@ -140,6 +140,7 @@ class MyInfoLogic extends GetxController {
         val?.position = info.position;
         val?.enterpriseWebsite = info.enterpriseWebsite;
         val?.tags = info.tags;
+        val?.contactInfo = info.contactInfo;
       });
     }
   }

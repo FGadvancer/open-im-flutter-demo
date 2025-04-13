@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:openim_common/openim_common.dart';
@@ -10,16 +11,10 @@ class SplashPage extends StatelessWidget {
 
   SplashPage({super.key});
 
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:Colors.blue.shade300,
-      body: Center(
-        child: ImageRes.splashBackground.toImage
-          ..width = double.infinity
-          ..height = double.infinity
-          ..fit = BoxFit.cover, // 让图片铺满屏幕
-      ),
+    return const Scaffold(
+      backgroundColor: Colors.transparent, // 不影响原生背景图
+      body: SizedBox.expand(),
     );
   }
 }

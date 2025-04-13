@@ -44,6 +44,79 @@ class IMViews {
     }
   }
 
+  static Future showInfoToastOffset(
+      String msg, {
+        Duration? duration,
+        EasyLoadingToastPosition? toastPosition,
+        double? bottomOffset, // 👈 自定义 bottom 偏移
+        BuildContext? context, // 👈 需要 context 弹出
+      }) async {
+    if (msg.trim().isEmpty) {
+      return Future.value();
+    }
+
+    // 如果需要更细控制（比如设置偏移或者非标准位置）
+    if (bottomOffset != null && context != null) {
+      OverlayEntry overlayEntry = OverlayEntry(
+        builder: (context) {
+          double? top, bottom;
+          Alignment alignment = Alignment.center;
+
+          switch (toastPosition ?? EasyLoadingToastPosition.bottom) {
+            case EasyLoadingToastPosition.top:
+              top = bottomOffset; // 顶部偏移
+              alignment = Alignment.topCenter;
+              break;
+            case EasyLoadingToastPosition.center:
+              alignment = Alignment.center;
+              break;
+            case EasyLoadingToastPosition.bottom:
+              bottom = bottomOffset; // 底部偏移
+              alignment = Alignment.bottomCenter;
+              break;
+          }
+
+          return Positioned(
+            top: top,
+            bottom: bottom,
+            left: 20,
+            right: 20,
+            child: Material(
+              color: Colors.transparent,
+              child: Align(
+                alignment: alignment,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    msg,
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+
+      Overlay.of(context).insert(overlayEntry);
+      await Future.delayed(duration ?? const Duration(seconds: 2));
+      overlayEntry.remove();
+      return;
+    }
+
+    // 如果不需要自定义偏移，直接用 EasyLoading
+    return EasyLoading.showToast(
+      msg,
+      duration: duration,
+      toastPosition: toastPosition,
+    );
+  }
+
+
   static Future showAnimatedToast(String msg, {Duration? duration}) async {
     if (msg.trim().isNotEmpty) {
       Get.snackbar(
@@ -201,7 +274,7 @@ class IMViews {
                   locale: Get.locale,
                   pickerConfig: CameraPickerConfig(
                     enableAudio: true,
-                    enableRecording: true,
+                    enableRecording: false,
                     enableScaledPreview: false,
                     maximumRecordingDuration: 60.seconds,
                     onMinimumRecordDurationNotMet: () {

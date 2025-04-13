@@ -12,6 +12,7 @@ class MinePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('MinePage home build');
     return Scaffold(
       backgroundColor: Styles.c_F8F9FA,
       body: SingleChildScrollView(
@@ -20,10 +21,11 @@ class MinePage extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 180.h,
+                  height: 138.h,
                   width: 1.sw,
                   color: Styles.c_0089FF,
-                  child: ImageRes.mineHeaderBg.toImage,
+                  child: ImageRes.mineHeaderBg.toImage
+                    ..fit = BoxFit.cover,
                 ),
                 Obx(() => _buildMyInfoView()),
               ],

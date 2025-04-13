@@ -387,9 +387,17 @@ class ChatLogic extends SuperController {
   void sendTextMsg() async {
     var content = IMUtils.safeTrim(inputCtrl.text);
     if (content.isEmpty) return;
-    Message message = await OpenIM.iMManager.messageManager.createTextMessage(
-      text: content,
-    );
+    Message message;
+    if(quoteMsg != null) {
+      message = await OpenIM.iMManager.messageManager.createQuoteMessage(
+        text: content,
+        quoteMsg: quoteMsg!,
+      );
+    }else{
+      message = await OpenIM.iMManager.messageManager.createTextMessage(
+        text: content,
+      );
+    }
 
     _sendMessage(message);
   }
@@ -610,8 +618,11 @@ class ChatLogic extends SuperController {
   }
 
   void _reset(Message message) {
-    if (message.contentType == MessageType.text) {
+    if (message.contentType == MessageType.text ||
+        message.contentType == MessageType.atText ||
+        message.contentType == MessageType.quote) {
       inputCtrl.clear();
+      setQuoteMsg(null);
     }
   }
 
@@ -784,7 +795,7 @@ class ChatLogic extends SuperController {
       locale: Get.locale,
       pickerConfig: CameraPickerConfig(
         enableAudio: true,
-        enableRecording: true,
+        enableRecording: false,
         enableScaledPreview: false,
         maximumRecordingDuration: 60.seconds,
         onMinimumRecordDurationNotMet: () {
@@ -1039,7 +1050,7 @@ class ChatLogic extends SuperController {
     }
   }
 
-  // 生成草稿draftText
+  // draftText
   String createDraftText() {
     var atMap = <String, dynamic>{};
     // for (var uid in curMsgAtUser) {
@@ -1077,8 +1088,11 @@ class ChatLogic extends SuperController {
   }
 
   void copy(Message message) {
-    final content = copyTextMap[message.clientMsgID] ?? message.textElem?.content;
-
+    String? content;
+     content = copyTextMap[message.clientMsgID] ?? message.textElem?.content;
+    if (message.isQuoteType) {
+      content = message.quoteElem?.text;
+    }
     if (null != content) {
       IMUtils.copy(text: content.replaceAll('\u200B', ''));
     }
@@ -1592,7 +1606,8 @@ class ChatLogic extends SuperController {
   }
 
   bool showCopyMenu(Message message) {
-    return message.isTextType;
+      return message.isTextType ||
+          message.isQuoteType;
   }
 
   bool showDelMenu(Message message) {
@@ -1617,6 +1632,7 @@ class ChatLogic extends SuperController {
         message.isVideoType ||
         message.isPictureType ||
         message.isLocationType ||
+        message.isQuoteType ||
         message.isFileType ||
         message.isCardType ||
         message.isCustomFaceType;

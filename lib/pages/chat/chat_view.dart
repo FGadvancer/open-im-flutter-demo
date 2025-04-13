@@ -11,6 +11,75 @@ class ChatPage extends StatelessWidget {
 
   ChatPage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: logic.willPop(),
+      child: ChatVoiceRecordLayout(
+        onCompleted: logic.sendVoice,
+        builder: (bar) => Obx(() {
+          return Scaffold(
+              backgroundColor: Styles.c_F0F2F6,
+              appBar: TitleBar.chat(
+                title: logic.nickname.value,
+                member: logic.memberStr,
+                subTitle: logic.subTile,
+                showOnlineStatus: logic.showOnlineStatus(),
+                isOnline: logic.onlineStatus.value,
+                onCloseMultiModel: logic.exit,
+                onClickMoreBtn: logic.chatSetup,
+                onClickCallBtn: logic.call,
+                showCallBtn: false,
+              ),
+              body: SafeArea(
+                child: WaterMarkBgView(
+                  text: '',
+                  path: logic.background.value,
+                  backgroundColor: Styles.c_FFFFFF,
+                  floatView: _groupCallHintView,
+                  bottomView: ChatInputBox(
+                    forceCloseToolboxSub: logic.forceCloseToolbox,
+                    controller: logic.inputCtrl,
+                    focusNode: logic.focusNode,
+                    isNotInGroup: logic.isInvalidGroup,
+                    quoteContent: logic.quoteContent.value,
+                    onClearQuote: () => logic.setQuoteMsg(null),
+                    directionalText: logic.directionalText(),
+                    onCloseDirectional: logic.onClearDirectional,
+                    onSend: (v) => logic.sendTextMsg(),
+                    toolbox: ChatToolBox(
+                      onTapAlbum: logic.onTapAlbum,
+                      onTapCamera: logic.onTapCamera,
+                      // onTapCall: logic.call,
+                      onTapCard: logic.onTapCarte,
+                      onTapFile: logic.onTapFile,
+                    ),
+                    voiceRecordBar: bar,
+                    emojiView: ChatEmojiView(
+                      textEditingController: logic.inputCtrl,
+                      favoriteList: logic.cacheLogic.urlList,
+                      onAddFavorite: logic.favoriteManage,
+                      onSelectedFavorite: logic.sendFavoritePic,
+                    ),
+                  ),
+                  child: ChatListView(
+                    onTouch: () => logic.closeToolbox(),
+                    itemCount: logic.messageList.length,
+                    controller: logic.scrollController,
+                    onScrollToBottomLoad: logic.onScrollToBottomLoad,
+                    onScrollToTop: logic.onScrollToTop,
+                    itemBuilder: (_, index) {
+                      final message = logic.indexOfMessage(index);
+                      return Obx(() => _buildItemView(message));
+                    },
+                  ),
+                ),
+              ));
+        }),
+      ),
+    );
+  }
+
   Widget _buildItemView(Message message) => ChatItemView(
         key: logic.itemKey(message),
         message: message,
@@ -41,6 +110,7 @@ class ChatPage extends StatelessWidget {
         onTapCopyMenu: () => logic.copy(message),
         onTapDelMenu: () => logic.deleteMsg(message),
         onTapForwardMenu: () => logic.forward(message),
+        onTapReplyMenu: () => logic.setQuoteMsg(message),
         onTapRevokeMenu: () {
           logic.markRevokedMessage(message);
           logic.revokeMsgV2(message);
@@ -62,6 +132,10 @@ class ChatPage extends StatelessWidget {
         customTypeBuilder: _buildCustomTypeItemView,
         fileDownloadProgressView: FileDownloadProgressView(message),
         patterns: <MatchPattern>[
+          MatchPattern(
+            type: PatternType.at,
+            onTap: logic.clickLinkText,
+          ),
           MatchPattern(
             type: PatternType.email,
             onTap: logic.clickLinkText,
@@ -204,72 +278,5 @@ class ChatPage extends StatelessWidget {
 
   Widget? get _groupCallHintView => null;
 
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: logic.willPop(),
-      child: ChatVoiceRecordLayout(
-        onCompleted: logic.sendVoice,
-        builder: (bar) => Obx(() {
-          return Scaffold(
-              backgroundColor: Styles.c_F0F2F6,
-              appBar: TitleBar.chat(
-                title: logic.nickname.value,
-                member: logic.memberStr,
-                subTitle: logic.subTile,
-                showOnlineStatus: logic.showOnlineStatus(),
-                isOnline: logic.onlineStatus.value,
-                onCloseMultiModel: logic.exit,
-                onClickMoreBtn: logic.chatSetup,
-                onClickCallBtn: logic.call,
-                showCallBtn: false,
-              ),
-              body: SafeArea(
-                child: WaterMarkBgView(
-                  text: '',
-                  path: logic.background.value,
-                  backgroundColor: Styles.c_FFFFFF,
-                  floatView: _groupCallHintView,
-                  bottomView: ChatInputBox(
-                    forceCloseToolboxSub: logic.forceCloseToolbox,
-                    controller: logic.inputCtrl,
-                    focusNode: logic.focusNode,
-                    isNotInGroup: logic.isInvalidGroup,
-                    quoteContent: logic.quoteContent.value,
-                    onClearQuote: () => logic.setQuoteMsg(null),
-                    directionalText: logic.directionalText(),
-                    onCloseDirectional: logic.onClearDirectional,
-                    onSend: (v) => logic.sendTextMsg(),
-                    toolbox: ChatToolBox(
-                      onTapAlbum: logic.onTapAlbum,
-                      onTapCamera: logic.onTapCamera,
-                      // onTapCall: logic.call,
-                      onTapCard: logic.onTapCarte,
-                      onTapFile: logic.onTapFile,
-                    ),
-                    voiceRecordBar: bar,
-                    emojiView: ChatEmojiView(
-                      textEditingController: logic.inputCtrl,
-                      favoriteList: logic.cacheLogic.urlList,
-                      onAddFavorite: logic.favoriteManage,
-                      onSelectedFavorite: logic.sendFavoritePic,
-                    ),
-                  ),
-                  child: ChatListView(
-                    onTouch: () => logic.closeToolbox(),
-                    itemCount: logic.messageList.length,
-                    controller: logic.scrollController,
-                    onScrollToBottomLoad: logic.onScrollToBottomLoad,
-                    onScrollToTop: logic.onScrollToTop,
-                    itemBuilder: (_, index) {
-                      final message = logic.indexOfMessage(index);
-                      return Obx(() => _buildItemView(message));
-                    },
-                  ),
-                ),
-              ));
-        }),
-      ),
-    );
-  }
+
 }

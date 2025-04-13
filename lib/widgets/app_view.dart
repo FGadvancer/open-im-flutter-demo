@@ -43,7 +43,8 @@ class AppView extends StatelessWidget {
     );
 
     EasyLoading.instance
-      ..userInteractions = false
+      ..userInteractions = true
+      ..maskType = EasyLoadingMaskType.none
       ..indicatorSize = 50
       ..backgroundColor = Styles.c_0C1C33
       ..indicatorColor = CupertinoColors.systemGrey2

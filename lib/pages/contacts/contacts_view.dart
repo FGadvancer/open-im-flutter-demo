@@ -12,6 +12,7 @@ class ContactsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('ContactsPage home build');
     return Scaffold(
       appBar: TitleBar.contacts(
         onClickAddContacts: logic.addContacts,
@@ -46,7 +47,7 @@ class ContactsPage extends StatelessWidget {
               ),
               _buildItemView(
                 assetsName: ImageRes.searchPersonIcon,
-                label:  "左邻右舍",
+                label:  StrRes.userDiscovery,
                 onTap: logic.userDiscovery,
               ),
             ],

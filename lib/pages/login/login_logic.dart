@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_openim_sdk/flutter_openim_sdk.dart';
 import 'package:get/get.dart';
 import 'package:openim_common/openim_common.dart';
@@ -119,6 +120,8 @@ class LoginLogic extends GetxController with GetTickerProviderStateMixin {
   void onReady() {
     super.onReady();
     getPackageInfo();
+    FlutterNativeSplash.remove();
+
   }
 
   _onChanged() {

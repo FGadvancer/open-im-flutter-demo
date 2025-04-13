@@ -14,7 +14,7 @@ class MatchTextView extends StatelessWidget {
   final TextOverflow overflow;
   final int? maxLines;
   final double textScaleFactor;
-
+  final Map<String, String> allAtMap;
   final List<MatchPattern> patterns;
   final TextModel model;
   final Function(String? text)? onVisibleTrulyText;
@@ -23,7 +23,7 @@ class MatchTextView extends StatelessWidget {
 
   const MatchTextView(
       {Key? key,
-      required this.text,
+      required this.text,this.allAtMap = const <String, String>{},
       this.prefixSpan,
       this.patterns = const <MatchPattern>[],
       this.textAlign = TextAlign.left,
@@ -73,7 +73,10 @@ class MatchTextView extends StatelessWidget {
     final mappingMap = <String, MatchPattern>{};
 
     for (var e in patterns) {
-      if (e.type == PatternType.email) {
+      if (e.type == PatternType.at) {
+        mappingMap[regexAt] = e;
+        mappingMap[regexAtAll] = MatchPattern(type: PatternType.atAll);
+      }else if (e.type == PatternType.email) {
         mappingMap[regexEmail] = e;
       } else if (e.type == PatternType.mobile) {
         mappingMap[regexMobile] = e;
@@ -163,7 +166,12 @@ class MatchPattern {
   MatchPattern({required this.type, this.pattern, this.style, this.onTap});
 }
 
-enum PatternType { email, mobile, tel, url, emoji, custom }
+enum PatternType { at, atAll,email, mobile, tel, url, emoji, custom }
+
+const regexAt = r"(@\d+\s)|(@\d+)";
+
+
+const regexAtAll = r'@AtAllTag ';
 
 const regexEmail = r"\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b";
 

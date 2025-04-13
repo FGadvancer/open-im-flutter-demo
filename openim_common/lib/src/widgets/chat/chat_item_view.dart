@@ -8,6 +8,8 @@ import 'package:focus_detector_v2/focus_detector_v2.dart';
 import 'package:openim_common/openim_common.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'chat_quote_view.dart';
+
 double maxWidth = 247.w;
 double pictureWidth = 120.w;
 double videoWidth = 120.w;
@@ -96,11 +98,13 @@ class ChatItemView extends StatefulWidget {
     this.patterns = const [],
     this.onTapLeftAvatar,
     this.onTapRightAvatar,
+    this.quoteView,
     this.onLongPressLeftAvatar,
     this.onLongPressRightAvatar,
     this.onTapCopyMenu,
     this.onTapDelMenu,
     this.onTapForwardMenu,
+    this.onTapReplyMenu,
     this.onTapRevokeMenu,
     this.onVisibleTrulyText,
     this.onPopMenuShowChanged,
@@ -144,7 +148,7 @@ class ChatItemView extends StatefulWidget {
   final bool enabledAddEmojiMenu;
   final bool showLeftNickname;
   final bool showRightNickname;
-
+  final Widget? quoteView;
   final Color? highlightColor;
   final Map<String, String> allAtMap;
   final List<MatchPattern> patterns;
@@ -155,6 +159,7 @@ class ChatItemView extends StatefulWidget {
   final Function()? onTapCopyMenu;
   final Function()? onTapDelMenu;
   final Function()? onTapForwardMenu;
+  final Function()? onTapReplyMenu;
   final Function()? onTapRevokeMenu;
   final Function()? onTapAddEmojiMenu;
   final Function(String? text)? onVisibleTrulyText;
@@ -284,6 +289,14 @@ class _ChatItemViewState extends State<ChatItemView> {
         latitude: location.latitude!,
         longitude: location.longitude!,
       );
+    } else if (_message.isQuoteType) {
+      isBubbleBg = true;
+      child = ChatText(
+        text: _message.quoteElem?.text ?? '',
+        allAtMap: IMUtils.getAtMapping(_message, widget.allAtMap),
+        patterns: widget.patterns,
+        onVisibleTrulyText: widget.onVisibleTrulyText,
+      );
     } else if (_message.isCardType) {
       child = ChatCarteView(cardElem: _message.cardElem!);
     } else if (_message.isCustomFaceType) {
@@ -343,12 +356,19 @@ class _ChatItemViewState extends State<ChatItemView> {
       onLongPressRightAvatar: widget.onLongPressRightAvatar,
       onTapLeftAvatar: widget.onTapLeftAvatar,
       onTapRightAvatar: widget.onTapRightAvatar,
+      quoteView: _quoteMsgView,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: widget.onClickItemView,
         child: child ?? ChatText(text: StrRes.unsupportedMessage),
       ),
     );
+  }
+
+  Widget? get _quoteMsgView {
+    final quoteMsg = _message.quoteMessage;
+
+    return quoteMsg != null ? ChatQuoteView(quoteMsg: quoteMsg) : null;
   }
 
   List<MenuInfo> get _menusItem => [
@@ -373,6 +393,13 @@ class _ChatItemViewState extends State<ChatItemView> {
             enabled: widget.enabledForwardMenu,
             onTap: widget.onTapForwardMenu,
           ),
+    if (widget.enabledReplyMenu)
+      MenuInfo(
+        icon: ImageRes.menuReply,
+        text: StrRes.menuReply,
+        enabled: widget.enabledReplyMenu,
+        onTap: widget.onTapReplyMenu,
+      ),
         if (widget.enabledRevokeMenu)
           MenuInfo(
             icon: ImageRes.menuRevoke,

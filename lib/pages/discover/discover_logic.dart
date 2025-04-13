@@ -2,21 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:openim/core/controller/app_controller.dart';
 import 'package:openim_common/openim_common.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
-import 'package:webview_flutter_android/webview_flutter_android.dart';
-
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class DiscoverLogic extends GetxController {
   final appLogic = Get.find<AppController>();
   final url = ''.obs;
 
-  final controller = Rx<WebViewController?>(null);
+  final controller = Rx<InAppWebViewController?>(null);
   final isError = false.obs;
   final hasPageFinished = false.obs;
   final progress = 0.0.obs;
@@ -29,86 +24,16 @@ class DiscoverLogic extends GetxController {
     if (temp == null) {
       appLogic.queryClientConfig().then((value) {
         url.value = value['discoverPageURL'] ?? 'https://www.yunquetai.com';
-        initWebView();
       });
     } else {
       url.value = temp;
-      initWebView();
     }
   }
 
-  void initWebView() {
-    late final PlatformWebViewControllerCreationParams params;
-    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-      params = WebKitWebViewControllerCreationParams(
-        allowsInlineMediaPlayback: true,
-        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
-      );
-    } else {
-      params = const PlatformWebViewControllerCreationParams();
+  void returnToInitialUrl() {
+    if (url.isNotEmpty) {
+      controller.value?.loadUrl(urlRequest: URLRequest(url: WebUri(url.value)));
     }
-
-    final webCtrl = WebViewController.fromPlatformCreationParams(params);
-
-    webCtrl
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(NavigationDelegate(
-        onProgress: (p) => progress.value = p / 100,
-        onPageStarted: (url) {
-          hasPageFinished.value = false;
-          isError.value = false;
-          if (Platform.isAndroid) {
-            SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-          }
-        },
-        onPageFinished: (url) {
-          if (!isError.value) hasPageFinished.value = true;
-          if (Platform.isAndroid) {
-            SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
-          }
-        },
-        onWebResourceError: (error) {
-          if (error.isForMainFrame ?? false) {
-            errorConfig.value = ErrorConfig.network;
-            isError.value = true;
-            hasPageFinished.value = false;
-          }
-        },
-        onHttpError: (error) {
-          final status = error.response?.statusCode;
-          isError.value = true;
-          hasPageFinished.value = false;
-          errorConfig.value = switch (status) {
-            404 => ErrorConfig.notFound404,
-            500 => ErrorConfig.serverError500,
-            _ when status != null => ErrorConfig.otherHttp(status),
-            _ => ErrorConfig.network,
-          };
-        },
-        onNavigationRequest: (req) {
-          return req.url.startsWith('https://www.youtube.com/')
-              ? NavigationDecision.prevent
-              : NavigationDecision.navigate;
-        },
-      ))
-      ..addJavaScriptChannel(
-        'Toaster',
-        onMessageReceived: (message) {
-          Get.rawSnackbar(message: message.message);
-        },
-      )
-      ..loadRequest(Uri.parse(url.value));
-
-    if (!Platform.isMacOS) {
-      webCtrl.setBackgroundColor(Styles.c_F8F9FA);
-    }
-
-    if (webCtrl.platform is AndroidWebViewController) {
-      (webCtrl.platform as AndroidWebViewController).setMediaPlaybackRequiresUserGesture(false);
-      AndroidWebViewController.enableDebugging(true);
-    }
-
-    controller.value = webCtrl;
   }
 
   void reload() {
@@ -118,7 +43,14 @@ class DiscoverLogic extends GetxController {
   }
 
   Future<bool> goBack() async {
+    final currentUrl = await controller.value?.getUrl();
+    print("current url $currentUrl   ${url.value}");
+    if (currentUrl.toString() == url.value) {
+      return false; // 已经在主页，不再进行返回
+    }
+    print("current url 111 $currentUrl   ${url.value}");
     if (await controller.value?.canGoBack() ?? false) {
+      print("current url 222 $currentUrl   ${url.value}");
       controller.value?.goBack();
       return true;
     }
@@ -126,29 +58,112 @@ class DiscoverLogic extends GetxController {
   }
 }
 class DiscoverWebView extends GetView<DiscoverLogic> {
+  String? _currentMainUrl;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-        final ctrl = controller.controller.value;
-        if (ctrl == null) return const Center(child: CircularProgressIndicator());
+      final url = controller.url.value;
+      if (url.isEmpty) return const Center(child: CircularProgressIndicator());
 
-        return Stack(
-          children: [
-            Opacity(
-              opacity: controller.hasPageFinished.value ? 1 : 0,
-              child: WebViewWidget(controller: ctrl),
-            ),
-            if (controller.isError.value) _buildErrorView(),
-            if (controller.progress.value < 1.0)
-              LinearProgressIndicator(
-                value: controller.progress.value,
-                color: Colors.green,
-                backgroundColor: Styles.c_F8F9FA,
-                minHeight: 2,
+      return Stack(
+        children: [
+          AnimatedOpacity(
+            opacity: controller.hasPageFinished.value ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 300),
+            child:
+            InAppWebView(
+              initialUrlRequest: URLRequest(
+                url: WebUri.uri(Uri.parse(url)),
+                headers: {
+                  'Accept-Encoding': 'gzip, deflate, br',
+                  // 'User-Agent':
+                  // 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                },
               ),
-          ],
-        );
-      });
+
+              initialSettings: InAppWebViewSettings(
+                disableDefaultErrorPage: false,
+                cacheEnabled: true,
+                javaScriptEnabled: true,
+                hardwareAcceleration: true,
+                cacheMode: CacheMode.LOAD_DEFAULT,
+                useHybridComposition:true,
+
+                // transparentBackground: true,
+              ),
+              onReceivedError: (webCtrl, request, error) {
+                final isMainFrame = request.url.toString() == _currentMainUrl;
+                if (isMainFrame) {
+                print('WebView Error: $error');
+                controller.errorConfig.value = ErrorConfig.network;
+                controller.isError.value = true;
+                controller.hasPageFinished.value = false;
+                }
+              },
+              onReceivedHttpError: (webCtrl, request, error) {
+                final isMainFrame = request.url.toString() == _currentMainUrl;
+                if (isMainFrame) {
+                print('WebView HTTP Error: $error');
+                controller.errorConfig.value = switch (error.statusCode) {
+                  404 => ErrorConfig.notFound404,
+                  500 => ErrorConfig.serverError500,
+                  _ when error.statusCode != null => ErrorConfig.otherHttp(error.statusCode),
+                  _ => ErrorConfig.network,
+                };
+                controller.isError.value = true;
+                controller.hasPageFinished.value = false;
+                }
+              },
+              onWebViewCreated: (webCtrl) {
+                controller.controller.value = webCtrl;
+              },
+              onLoadStart: (webCtrl, url) {
+                _currentMainUrl = url?.toString();
+                controller.hasPageFinished.value = false;
+                controller.isError.value = false;
+              },
+              // onLoadStop: (webCtrl, url) {
+              //   print('Page finished loading: $url');
+              //
+              // },
+              onPageCommitVisible:(webCtrl, url) {
+                print('Page finished loading: $url');
+                if (!controller.isError.value) {
+                  controller.hasPageFinished.value = true;
+                }
+              },
+              onProgressChanged: (webCtrl, progress) {
+                print('Page loading progress: $progress');
+
+                  controller.progress.value = progress / 100;
+                 // if (progress > 50) {
+                 //   if (!controller.isError.value) {
+                 //     controller.hasPageFinished.value = true;
+                 //   }
+                 // }
+
+              },
+              shouldOverrideUrlLoading: (webCtrl, navigationAction) async {
+                final url = navigationAction.request.url.toString();
+                if (url.startsWith('https://www.youtube.com/')) {
+                  return NavigationActionPolicy.CANCEL;
+                }
+                return NavigationActionPolicy.ALLOW;
+              },
+            ),
+
+          ),
+          if (controller.isError.value) _buildErrorView(),
+          if (controller.progress.value < 1.0&&  controller.controller.value?.getUrl().toString() != controller.url.value)
+            LinearProgressIndicator(
+              value: controller.progress.value,
+              color: Colors.green,
+              backgroundColor: Styles.c_F8F9FA,
+              minHeight: 2,
+            ),
+        ],
+      );
+    });
   }
 
   Widget _buildErrorView() {

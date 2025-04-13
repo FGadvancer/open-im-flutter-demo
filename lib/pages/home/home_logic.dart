@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_openim_sdk/flutter_openim_sdk.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:get/get.dart';
@@ -82,6 +83,7 @@ class HomeLogic extends SuperController {
 
   @override
   void onInit() {
+    print("init home again");
     _isAutoLogin = Get.arguments != null ? Get.arguments['isAutoLogin'] : false;
     if (_isAutoLogin == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _showLockScreenPwd());
@@ -121,6 +123,7 @@ class HomeLogic extends SuperController {
     getUnhandledGroupApplicationCount();
     cacheLogic.initCallRecords();
     cacheLogic.initFavoriteEmoji();
+    FlutterNativeSplash.remove();
     super.onReady();
   }
 

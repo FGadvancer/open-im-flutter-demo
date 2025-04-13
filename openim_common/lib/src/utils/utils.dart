@@ -90,6 +90,18 @@ class IMUtils {
     );
   }
 
+  static String hidePhoneNumber(String? phoneNumber) {
+    if (phoneNumber == null || phoneNumber.trim().isEmpty) {
+      return '';
+    }
+    final trimmed = phoneNumber.trim();
+    if (trimmed.length < 7) {
+      return trimmed;
+    }
+    return trimmed.replaceRange(3, 7, '****');
+  }
+
+
   static String getSuffix(String url) {
     if (!url.contains(".")) return "";
     return url.substring(url.lastIndexOf('.'), url.length);
@@ -1689,7 +1701,7 @@ class IMUtils {
 
 
   static bool isValidEnterpriseName(String enterpriseName) {
-    const int minLength = 10;
+    const int minLength = 8;
     const int maxChineseLength = 20;
     const int maxEnglishLength = 32;
 

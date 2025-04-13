@@ -91,6 +91,10 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.release
+            debug {
+                shrinkResources false
+                minifyEnabled false
+            }
         }
         profile {
             signingConfig signingConfigs.release

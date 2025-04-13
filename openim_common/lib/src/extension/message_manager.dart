@@ -33,8 +33,19 @@ extension MessageManagerExt on MessageManager {
 }
 
 extension MessageExt on Message {
+  /// 引用消息
+  Message? get quoteMessage {
+    Message? quoteMsg;
+    if (contentType == MessageType.quote) {
+      quoteMsg = quoteElem?.quoteMessage;
+    } else if (contentType == MessageType.atText) {
+      quoteMsg = atTextElem?.quoteMessage;
+    }
+    return quoteMsg;
+  }
 
   bool get isDeletedByFriendType {
+
     if (isCustomType) {
       try {
         var map = json.decode(customElem!.data!);
@@ -75,6 +86,8 @@ extension MessageExt on Message {
 
   bool get isTextType => contentType == MessageType.text;
 
+  bool get isAtTextType => contentType == MessageType.atText;
+
   bool get isPictureType => contentType == MessageType.picture;
 
   bool get isVoiceType => contentType == MessageType.voice;
@@ -84,6 +97,8 @@ extension MessageExt on Message {
   bool get isFileType => contentType == MessageType.file;
 
   bool get isLocationType => contentType == MessageType.location;
+
+  bool get isQuoteType => contentType == MessageType.quote;
 
   bool get isCardType => contentType == MessageType.card;
 

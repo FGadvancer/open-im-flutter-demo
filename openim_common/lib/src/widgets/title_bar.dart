@@ -247,10 +247,14 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
   TitleBar.workbench({
     super.key,
     this.showUnderline = false,
+    Function()? onTap,
   })  : height = 44.h,
         backgroundColor = Styles.c_FFFFFF,
         center = null,
-        left = StrRes.brand.toText..style = Styles.ts_0C1C33_20sp_semibold,
+        left = GestureDetector(
+          onTap: onTap ,
+          child: StrRes.brand.toText..style = Styles.ts_0C1C33_20sp_semibold,
+        ),
         right = null;
 
   TitleBar.search({

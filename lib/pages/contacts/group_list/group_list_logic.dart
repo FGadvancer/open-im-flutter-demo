@@ -28,21 +28,49 @@ class GroupListLogic extends GetxController {
 
   @override
   void onInit() {
-    imLoic.imSdkStatusPublishSubject.last.then((con) {
-      if (con.status == IMSdkStatus.syncEnded) {
-        iCreatedInitial();
-        iJoinedInitial();
-      }
-    });
+    // imLoic.imSdkStatusPublishSubject.last.then((con) {
+    //   if (con.status == IMSdkStatus.syncEnded) {
+    //     iCreatedInitial();
+    //     iJoinedInitial();
+    //   }
+    // });
 
-    iCreatedInitial();
-    iJoinedInitial();
+    _initGroupList();
 
     super.onInit();
   }
 
   void switchTab(i) {
     index.value = i;
+  }
+
+  Future<void> _initGroupList() async {
+
+    final allGroups = await OpenIM.iMManager.groupManager.getJoinedGroupListPage(offset: 0, count: count);
+
+
+    final created = allGroups.where((e) => e.ownerUserID == OpenIM.iMManager.userID).toList();
+    final joined = allGroups.where((e) => e.ownerUserID != OpenIM.iMManager.userID).toList();
+
+    iCreatedList.assignAll(created);
+    iJoinedList.assignAll(joined);
+
+    iCreateRefreshController.refreshCompleted();
+    iJoinRefreshController.refreshCompleted();
+
+
+    if (created.length < count) {
+      iCreatedOffset = created.length;
+      iCreateRefreshController.loadNoData();
+    } else {
+      iCreatedOffset += created.length;
+    }
+    if (joined.length < count) {
+      iJoinedOffset = joined.length;
+      iJoinRefreshController.loadNoData();
+    } else {
+      iJoinedOffset += joined.length;
+    }
   }
 
   void iCreatedInitial() async {
@@ -103,11 +131,11 @@ class GroupListLogic extends GetxController {
 
     if (iCreate) {
       final result = list.where((e) => e.ownerUserID == OpenIM.iMManager.userID);
-      iCreatedList.addAll(result);
+      iCreatedList.assignAll(result);
       iCreatedCount = result.length;
     } else {
       final result = list.where((e) => e.ownerUserID != OpenIM.iMManager.userID);
-      iJoinedList.addAll(result);
+      iJoinedList.assignAll(result);
       iJoinedCount = result.length;
     }
 

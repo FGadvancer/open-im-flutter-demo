@@ -81,7 +81,7 @@ class SetPasswordPage extends StatelessWidget {
               label: StrRes.enterpriseName,
               hintText: StrRes.plsEnterEnterpriseName,
               controller: logic.enterpriseNameCtrl,
-              formatHintText: "10~20位，（例如：深圳市xxx有限责任公司）" ,
+              formatHintText: "8~20位，（例如：深圳市xxx有限责任公司）" ,
             ),
             10.verticalSpace,
             InputBox.password(

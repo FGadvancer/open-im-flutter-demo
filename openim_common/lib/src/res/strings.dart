@@ -74,6 +74,8 @@ class StrRes {
 
   static String get plsEnterRightPhone => 'plsEnterRightPhone'.tr;
 
+  static String get appExitTip => 'appExitTip'.tr;
+
   static String get plsEnterRightPhoneOrEmail => 'plsEnterRightPhoneOrEmail'.tr;
 
   static String get enterVerificationCode => 'enterVerificationCode'.tr;

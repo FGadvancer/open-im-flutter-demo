@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +20,13 @@ class HomePage extends StatelessWidget {
 
   DateTime? _lastBackTime;
   HomePage({super.key});
+  final List<Widget> _pages = [
+    KeepAliveWrapper(child: ConversationPage(),),
+    KeepAliveWrapper(child: ContactsPage()),
+    KeepAliveWrapper(child: DiscoverPage()),
+    KeepAliveWrapper(child: MinePage()),
+  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,25 +35,26 @@ class HomePage extends StatelessWidget {
           canPop: false, // 禁用自动弹栈
             onPopInvokedWithResult: (didPop,_) async {
         if (!didPop) {
-          _handleGlobalBack(context);
+         _handleGlobalBack(context);
         }
       },
       child:
-      Scaffold(
-        backgroundColor: Styles.c_FFFFFF,
-        body: Obx(
-              () => IndexedStack(
-            index: logic.currentIndex.value,
-            children: [
-              _keepAliveWrapper(ConversationPage()),
-              _keepAliveWrapper(ContactsPage()),
-              _keepAliveWrapper(DiscoverPage()),
-              _keepAliveWrapper(MinePage()),
-            ],
-          ),
-        ),
-        bottomNavigationBar: _buildBottomNavBar(),
-      ));
+      Theme(
+      data: Theme.of(context).copyWith(
+    splashFactory: NoSplash.splashFactory,
+    highlightColor: Colors.transparent,
+    splashColor: Colors.transparent,
+    ),
+    child:
+    Scaffold(
+      backgroundColor: Styles.c_FFFFFF,
+      body: Obx(() => IndexedStack(
+        index: logic.currentIndex.value,
+        children: _pages,
+      )),
+
+      bottomNavigationBar: _buildBottomNavBar(),
+      )));
   }
 
 
@@ -73,26 +82,18 @@ class HomePage extends StatelessWidget {
       SystemNavigator.pop(); // 退出应用
     } else {
       _lastBackTime = now;
-      // IMViews.showInfoToast("再按一次返回键退出云雀台",toastPosition: EasyLoadingToastPosition.center);
-      // 显示 Toast
-      Get.snackbar(
-        '提示',
-        '再按一次返回键退出云雀台',
-        margin: EdgeInsets.only(bottom: 60), // 根据 Tab 栏高度调整
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 2),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.easeOut,
-        backgroundColor: Colors.black54,
-        colorText: Colors.white,
-        // 禁止背景点击拦截
-        overlayBlur: 0,
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        IMViews.showInfoToastOffset(
+          StrRes.appExitTip,
+          toastPosition: EasyLoadingToastPosition.bottom,
+          duration: const Duration(seconds: 1),
+          context: context,
+          bottomOffset: 80,
+        );
+      });
     }
   }
 
-  Widget _keepAliveWrapper(Widget child) => KeepAliveWrapper(child: child);
 
   Widget _buildBottomNavBar() {
     return Obx(
@@ -159,23 +160,9 @@ class HomePage extends StatelessWidget {
     return BottomNavigationBarItem(
       icon: GestureDetector(
         onDoubleTap: onDoubleTap,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            normalIcon,
-            if (unreadCount > 0)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Transform.translate(
-                  offset: const Offset(2, -2),
-                  child: UnreadCountView(count: unreadCount),
-                ),
-              ),
-          ],
-        ),
+        child: _setupIcon(normalIcon, unreadCount)
       ),
-      activeIcon: activeIcon,
+      activeIcon: _setupIcon(activeIcon, unreadCount),
       label: label,
     );
   }

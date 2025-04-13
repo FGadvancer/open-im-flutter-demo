@@ -41,6 +41,7 @@ class PersonalInfoLogic extends GetxController {
         val?.position = existUser.position;
         val?.enterpriseWebsite = existUser.enterpriseWebsite;
         val?.tags = existUser.tags;
+        val?.contactInfo = existUser.contactInfo;
       });
     }
 
@@ -64,6 +65,7 @@ class PersonalInfoLogic extends GetxController {
         val?.position = info.position;
         val?.enterpriseWebsite = info.enterpriseWebsite;
         val?.tags = info.tags;
+        val?.contactInfo = info.contactInfo;
       });
     }
   }

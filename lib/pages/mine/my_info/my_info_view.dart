@@ -38,22 +38,22 @@ class MyInfoPage extends StatelessWidget {
                       value: imLogic.userInfo.value.nickname,
                       onTap: logic.editMyName,
                     ),
-                    _buildItemView(
-                      label: StrRes.gender,
-                      value: imLogic.userInfo.value.isMale ? StrRes.man : StrRes.woman,
-                      onTap: logic.selectGender,
-                    ),
-                    _buildItemView(
-                      label: StrRes.birthDay,
-                      value: DateUtil.formatDateMs(
-                        imLogic.userInfo.value.birth ?? 0,
-                        format: IMUtils.getTimeFormat1(),
-                      ),
-                      onTap: logic.openDatePicker,
-                    ),
+                    // _buildItemView(
+                    //   label: StrRes.gender,
+                    //   value: imLogic.userInfo.value.isMale ? StrRes.man : StrRes.woman,
+                    //   onTap: logic.selectGender,
+                    // ),
+                    // _buildItemView(
+                    //   label: StrRes.birthDay,
+                    //   value: DateUtil.formatDateMs(
+                    //     imLogic.userInfo.value.birth ?? 0,
+                    //     format: IMUtils.getTimeFormat1(),
+                    //   ),
+                    //   onTap: logic.openDatePicker,
+                    // ),
                     _buildItemView(
                       label: StrRes.mobile,
-                      value: imLogic.userInfo.value.phoneNumber,
+                      value: IMUtils.hidePhoneNumber(imLogic.userInfo.value.phoneNumber),
                       showRightArrow: false,
                     ),
                   ],
