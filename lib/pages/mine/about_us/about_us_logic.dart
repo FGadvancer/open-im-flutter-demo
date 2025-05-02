@@ -16,6 +16,7 @@ class AboutUsLogic extends GetxController {
   final imLogic = Get.find<IMController>();
   final lineTextController = TextEditingController(text: '1000');
   final displayVersion = ''.obs;
+  final hasNewVersion = false.obs;
 
   void getPackageInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -23,7 +24,7 @@ class AboutUsLogic extends GetxController {
     final appName = packageInfo.appName;
     final buildNumber = packageInfo.buildNumber;
 
-    displayVersion.value = '$appName v1.0.0';
+    displayVersion.value = '$appName  v$version ';
   }
 
   void checkUpdate() {
@@ -39,6 +40,16 @@ class AboutUsLogic extends GetxController {
     EasyLoading.showProgress(0);
     await OpenIM.iMManager.uploadLogs(line: line);
     EasyLoading.dismiss();
+  }
+
+  @override
+  void onInit() {
+    appLogic.isNewVersion().then((result) {
+      print('是否有新版本: $result');
+      hasNewVersion.value = result; // 在回调中赋值
+    });
+    super.onInit();
+
   }
 
   @override

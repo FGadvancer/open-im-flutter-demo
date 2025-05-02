@@ -972,24 +972,24 @@ class ChatLogic extends SuperController {
   }
 
   void onLongPressLeftAvatar(Message message) {
-    if (isInvalidGroup) return;
-    if (isGroupChat) {
-      var uid = message.sendID!;
-
-      var cursor = inputCtrl.selection.base.offset;
-      if (!focusNode.hasFocus) {
-        focusNode.requestFocus();
-        cursor = _lastCursorIndex;
-      }
-      if (cursor < 0) cursor = 0;
-      var start = inputCtrl.text.substring(0, cursor);
-      var end = inputCtrl.text.substring(cursor);
-      var at = '@$uid ';
-      inputCtrl.text = '$start$at$end';
-      Logger.print('start:$start end:$end  at:$at  content:${inputCtrl.text}');
-      inputCtrl.selection = TextSelection.collapsed(offset: '$start$at'.length);
-      _lastCursorIndex = inputCtrl.selection.start;
-    }
+    // if (isInvalidGroup) return;
+    // if (isGroupChat) {
+    //   var uid = message.sendID!;
+    //
+    //   var cursor = inputCtrl.selection.base.offset;
+    //   if (!focusNode.hasFocus) {
+    //     focusNode.requestFocus();
+    //     cursor = _lastCursorIndex;
+    //   }
+    //   if (cursor < 0) cursor = 0;
+    //   var start = inputCtrl.text.substring(0, cursor);
+    //   var end = inputCtrl.text.substring(cursor);
+    //   var at = '@$uid ';
+    //   inputCtrl.text = '$start$at$end';
+    //   Logger.print('start:$start end:$end  at:$at  content:${inputCtrl.text}');
+    //   inputCtrl.selection = TextSelection.collapsed(offset: '$start$at'.length);
+    //   _lastCursorIndex = inputCtrl.selection.start;
+    // }
   }
 
   void onTapLeftAvatar(Message message) {

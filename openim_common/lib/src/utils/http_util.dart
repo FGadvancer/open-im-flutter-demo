@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:openim_common/openim_common.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
+import 'package:get/get.dart' hide MultipartFile, FormData;
 
 var dio = Dio();
 
@@ -72,7 +73,9 @@ class HttpUtil {
       } else {
         if (showErrorToast) {
           //todo  can be set err info from error code from local string
-          IMViews.showErrorToast(resp.errDlt);
+          final msg = resp.errCode.toString().tr == resp.errCode.toString() ? resp.errMsg : resp.errCode.toString().tr;
+
+          IMViews.showErrorToast(msg);
         }
 
         return Future.error((resp.errCode, resp.errMsg));

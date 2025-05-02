@@ -34,10 +34,10 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           decoration: showUnderline
               ? BoxDecoration(
-                  border: BorderDirectional(
-                    bottom: BorderSide(color: Styles.c_E8EAEF, width: .5),
-                  ),
-                )
+            border: BorderDirectional(
+              bottom: BorderSide(color: Styles.c_E8EAEF, width: .5),
+            ),
+          )
               : null,
           child: Row(
             children: [
@@ -54,16 +54,15 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(height ?? 44.h);
 
-  TitleBar.conversation(
-      {super.key,
-      String? statusStr,
-      bool isFailed = false,
-      Function()? onScan,
-      Function()? onAddFriend,
-      Function()? onAddGroup,
-      Function()? onCreateGroup,
-      CustomPopupMenuController? popCtrl,
-      this.left})
+  TitleBar.conversation({super.key,
+    String? statusStr,
+    bool isFailed = false,
+    Function()? onScan,
+    Function()? onAddFriend,
+    Function()? onAddGroup,
+    Function()? onCreateGroup,
+    CustomPopupMenuController? popCtrl,
+    this.left})
       : backgroundColor = null,
         height = 62.h,
         showUnderline = false,
@@ -115,65 +114,68 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
     Function()? onClickCallBtn,
     Function()? onClickMoreBtn,
     Function()? onCloseMultiModel,
-  })  : backgroundColor = null,
+  })
+      : backgroundColor = null,
         height = 48.h,
         showUnderline = true,
         center = Flexible(
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (null != title)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                      flex: 5,
-                      child: Container(
-                        child: title.trim().toText
-                          ..style = Styles.ts_0C1C33_17sp_semibold
-                          ..maxLines = 1
-                          ..overflow = TextOverflow.ellipsis
-                          ..textAlign = TextAlign.center,
-                      )),
-                  if (null != member)
-                    Flexible(
-                        flex: 2,
-                        child: Container(
-                            child: member.toText
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (null != title)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                          flex: 5,
+                          child: Container(
+                            child: title
+                                .trim()
+                                .toText
                               ..style = Styles.ts_0C1C33_17sp_semibold
-                              ..maxLines = 1))
-                ],
-              ),
-            if (subTitle?.isNotEmpty == true)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (showOnlineStatus)
-                    Container(
-                      width: 6.w,
-                      height: 6.h,
-                      margin: EdgeInsets.only(right: 4.w),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isOnline ? Styles.c_18E875 : Styles.c_8E9AB0,
-                      ),
-                    ),
-                  subTitle!.toText..style = Styles.ts_8E9AB0_10sp,
-                ],
-              ),
-          ],
-        )),
+                              ..maxLines = 1
+                              ..overflow = TextOverflow.ellipsis
+                              ..textAlign = TextAlign.center,
+                          )),
+                      if (null != member)
+                        Flexible(
+                            flex: 2,
+                            child: Container(
+                                child: member.toText
+                                  ..style = Styles.ts_0C1C33_17sp_semibold
+                                  ..maxLines = 1))
+                    ],
+                  ),
+                if (subTitle?.isNotEmpty == true)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (showOnlineStatus)
+                        Container(
+                          width: 6.w,
+                          height: 6.h,
+                          margin: EdgeInsets.only(right: 4.w),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isOnline ? Styles.c_18E875 : Styles.c_8E9AB0,
+                          ),
+                        ),
+                      subTitle!.toText..style = Styles.ts_8E9AB0_10sp,
+                    ],
+                  ),
+              ],
+            )),
         left = SizedBox(
             width: showCallBtn ? 48.w : 24.w,
             child: isMultiModel
                 ? (StrRes.cancel.toText
-                  ..style = Styles.ts_0C1C33_17sp
-                  ..onTap = onCloseMultiModel)
+              ..style = Styles.ts_0C1C33_17sp
+              ..onTap = onCloseMultiModel)
                 : (ImageRes.backBlack.toImage
-                  ..width = 24.w
-                  ..height = 24.h
-                  ..onTap = (() => Get.back()))),
+              ..width = 24.w
+              ..height = 24.h
+              ..onTap = (() => Get.back()))),
         right = SizedBox(
             width: 16.w + (showCallBtn ? 56.w : 28.w),
             child: Row(
@@ -205,7 +207,8 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
     this.right,
     this.showUnderline = false,
     Function()? onTap,
-  })  : height = 44.h,
+  })
+      : height = 44.h,
         backgroundColor = backgroundColor ?? Styles.c_FFFFFF,
         center = Expanded(
             child: (title ?? '').toText
@@ -221,7 +224,8 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
                 ..width = 24.w
                 ..height = 24.h
                 ..color = backIconColor,
-              if (null != leftTitle) leftTitle.toText..style = (leftTitleStyle ?? Styles.ts_0C1C33_17sp_semibold),
+              if (null != leftTitle) leftTitle.toText
+                ..style = (leftTitleStyle ?? Styles.ts_0C1C33_17sp_semibold),
             ],
           ),
         );
@@ -230,7 +234,8 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.showUnderline = false,
     Function()? onClickAddContacts,
-  })  : height = 44.h,
+  })
+      : height = 44.h,
         backgroundColor = Styles.c_FFFFFF,
         center = Spacer(),
         left = StrRes.contacts.toText..style = Styles.ts_0C1C33_20sp_semibold,
@@ -252,7 +257,7 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor = Styles.c_FFFFFF,
         center = null,
         left = GestureDetector(
-          onTap: onTap ,
+          onTap: onTap,
           child: StrRes.brand.toText..style = Styles.ts_0C1C33_20sp_semibold,
         ),
         right = null;

@@ -403,7 +403,7 @@ class Apis {
     );
   }
 
-  static Future<UpgradeInfoV2> checkUpgradeV2() {
+  static Future<UpgradeInfoV2> checkUpgradeFromPgyer() {
     return dio.post<Map<String, dynamic>>(
       'https://www.pgyer.com/apiv2/app/check',
       options: Options(
@@ -416,10 +416,23 @@ class Apis {
     ).then((resp) {
       Map<String, dynamic> map = resp.data!;
       if (map['code'] == 0) {
-        return UpgradeInfoV2.fromJson(map['data']);
+        return UpgradeInfoV2.fromPgyerJson(map['data']);
       }
       return Future.error(map);
     });
+  }
+
+  static Future<UpgradeInfoV2> checkUpgradeFromApp() async {
+    try {
+      final data = await HttpUtil.post(
+        Urls.getClientConfig,
+        showErrorToast: false,
+        options: chatTokenOptions,
+      );
+      return UpgradeInfoV2.fromAppJson(data['config']);
+    } catch (e, s) {
+      return Future.error(e);
+    }
   }
 
   static Future<Map<String, dynamic>> getClientConfig() async {

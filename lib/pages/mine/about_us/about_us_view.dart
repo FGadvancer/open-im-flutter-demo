@@ -56,9 +56,7 @@ class AboutUsPage extends StatelessWidget {
                       children: [
                         StrRes.checkNewVersion.toText..style = Styles.ts_0C1C33_17sp,
                         const Spacer(),
-                        ImageRes.rightArrow.toImage
-                          ..width = 24.w
-                          ..height = 24.h,
+                       Obx(()=>_buildVersionIndicator()),
                       ],
                     ),
                   ),
@@ -103,6 +101,25 @@ class AboutUsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildVersionIndicator() {
+    return logic.hasNewVersion.value
+        ? Container(
+        width: 24.w,
+        height: 24.h,
+        alignment: Alignment.center,
+        child: Container(
+          width: 8.w, // 小红点直径
+          height: 8.h,
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(6.w),
+          ),
+        ))
+        : (ImageRes.rightArrow.toImage
+           ..width = 24.w
+            ..height = 24.h);
   }
 
   void _showInputDialog() {

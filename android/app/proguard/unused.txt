@@ -15721,8 +15721,6 @@ androidx.window.reflection.ReflectionUtils:
 androidx.window.reflection.WindowExtensionsConstants
 ch.simonbraillard.flutter_new_badger.BuildConfig
 ch.simonbraillard.flutter_new_badger.R
-cn.rentsoft.flutter.openim.business.BuildConfig
-cn.rentsoft.flutter.openim.business.R
 com.aaassseee.screen_brightness_android.BuildConfig
 com.aaassseee.screen_brightness_android.R
 com.aaassseee.screen_brightness_android.stream_handler.BaseStreamHandler:
@@ -29857,6 +29855,8 @@ com.twilio.audioswitch.wired.WiredHeadsetReceiver:
     public final void start(com.twilio.audioswitch.wired.WiredDeviceConnectionListener)
     public final void stop()
 com.twilio.audioswitch.wired.WiredHeadsetReceiverKt
+com.yunquetai.app.BuildConfig
+com.yunquetai.app.R
 de.julianassmann.flutter_background.BuildConfig
 de.julianassmann.flutter_background.FlutterBackgroundPlugin$Companion:
     public static synthetic void getENABLE_WIFI_LOCK_KEY$annotations()

@@ -17,7 +17,7 @@ class DiscoverPage extends StatelessWidget {
     print('DiscoverPage home build');
 
     return Scaffold(
-      appBar: TitleBar.workbench(onTap: logic.returnToInitialUrl,),
+      appBar: TitleBar.workbench(onTap: logic.returnToInitialUrl),
       backgroundColor: Styles.c_F8F9FA,
       body: DiscoverWebView(),
     );

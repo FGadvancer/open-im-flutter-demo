@@ -116,6 +116,7 @@ class DiscoverWebView extends GetView<DiscoverLogic> {
               },
               onWebViewCreated: (webCtrl) {
                 controller.controller.value = webCtrl;
+                _enableWebViewDebugging(webCtrl);
               },
               onLoadStart: (webCtrl, url) {
                 _currentMainUrl = url?.toString();
@@ -164,6 +165,14 @@ class DiscoverWebView extends GetView<DiscoverLogic> {
         ],
       );
     });
+  }
+
+  // 在 DiscoverWebView 类中添加此方法
+  void _enableWebViewDebugging(InAppWebViewController webCtrl) async {
+    if (Platform.isAndroid) {
+      await InAppWebViewController.setWebContentsDebuggingEnabled (true);
+    }
+    // iOS 自动支持 Safari 远程调试，无需额外代码
   }
 
   Widget _buildErrorView() {

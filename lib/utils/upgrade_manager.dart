@@ -48,7 +48,7 @@ mixin UpgradeManger {
   void checkUpdate() async {
     LoadingView.singleton.wrap(asyncFunction: () async {
       await getAppInfo();
-      return Apis.checkUpgradeV2();
+      return Apis.checkUpgradeFromApp();
     }).then((value) {
       upgradeInfoV2 = value;
       if (!canUpdate) {
@@ -67,10 +67,31 @@ mixin UpgradeManger {
     });
   }
 
+
+  Future<bool> isNewVersion() async {
+    try {
+      // 使用 await 确保等待整个流程完成
+      final result = await LoadingView.singleton.wrap(
+        asyncFunction: () async {
+          await getAppInfo(); // 明确等待前置操作
+          return Apis.checkUpgradeFromApp(); // 直接返回 API 结果
+        },
+      );
+
+      // 根据 API 返回结果判断是否需要更新
+      upgradeInfoV2 = result;
+      return canUpdate; // 假设 API 返回对象包含 shouldUpdate 属性
+    } catch (e) {
+      // 统一错误处理
+      print('版本检查失败: $e');
+      return false;
+    }
+  }
+
   autoCheckVersionUpgrade() async {
     if (isShowUpgradeDialog || isNowIgnoreUpdate) return;
     await getAppInfo();
-    upgradeInfoV2 = await Apis.checkUpgradeV2();
+    upgradeInfoV2 = await Apis.checkUpgradeFromPgyer();
 
     if (!canUpdate) return;
     isShowUpgradeDialog = true;

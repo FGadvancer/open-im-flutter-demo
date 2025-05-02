@@ -37,7 +37,7 @@ class UpgradeInfoV2 {
     this.appURl,
   });
 
-  UpgradeInfoV2.fromJson(Map<String, dynamic> json) {
+  UpgradeInfoV2.fromPgyerJson(Map<String, dynamic> json) {
     buildBuildVersion = json['buildBuildVersion'];
     forceUpdateVersion = json['forceUpdateVersion'];
     forceUpdateVersionNo = json['forceUpdateVersionNo'];
@@ -54,6 +54,25 @@ class UpgradeInfoV2 {
     buildFileKey = json['buildFileKey'];
     buildFileSize = json['buildFileSize'];
     appURl = json['appURl'];
+  }
+
+  UpgradeInfoV2.fromAppJson(Map<String, dynamic> json) {
+    buildBuildVersion = json['appVersion'];
+    forceUpdateVersion = json['forceUpdateVersion'];
+    forceUpdateVersionNo = json['forceUpdateVersionNo'];
+    needForceUpdate = false;
+    downloadURL = json['appFile'];
+    buildHaveNewVersion = json['buildHaveNewVersion'];
+    buildVersionNo = '1';
+    buildVersion = json['appVersion'];
+    buildUpdateDescription = json['buildUpdateDescription'];
+    appKey = json['appKey'];
+    buildKey = json['buildKey'];
+    buildName = json['buildName'];
+    buildIcon = json['buildIcon'];
+    buildFileKey = json['buildFileKey'];
+    buildFileSize = json['buildFileSize'];
+    appURl = json['appFile'];
   }
 
   Map<String, dynamic> toJson() {
