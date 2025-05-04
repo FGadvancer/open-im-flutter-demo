@@ -22,7 +22,7 @@ class VerifyPhonePage extends StatelessWidget {
                 .toText
               ..style = Styles.ts_0089FF_22sp_semibold,
             10.verticalSpace,
-            '${logic.account} ${sprintf(StrRes.defaultVerificationCode, ['666666'])}'.toText
+            logic.account.toText
               ..style = Styles.ts_8E9AB0_12sp,
             35.verticalSpace,
             PinCodeTextField(

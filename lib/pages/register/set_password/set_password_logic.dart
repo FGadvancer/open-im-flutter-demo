@@ -170,6 +170,7 @@ class SetPasswordLogic extends GetxController {
           userID: data.userID,
         );
       }
+      imLogic.queryMyFullInfo();
     });
     AppNavigator.startMain();
   }

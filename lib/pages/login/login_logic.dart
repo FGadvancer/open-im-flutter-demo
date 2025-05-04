@@ -164,6 +164,17 @@ class LoginLogic extends GetxController with GetTickerProviderStateMixin {
           return false;
         }
       }
+      if (isPasswordLogin.value) {
+        if (pwdCtrl.text.isEmpty) {
+          IMViews.showToast(StrRes.plsEnterPassword);
+          return false;
+        }
+      } else {
+        if (verificationCodeCtrl.text.isEmpty) {
+          IMViews.showToast(StrRes.plsEnterVerificationCode);
+          return false;
+        }
+      }
       final password = IMUtils.emptyStrToNull(pwdCtrl.text);
       final code = IMUtils.emptyStrToNull(verificationCodeCtrl.text);
       final data = await Apis.login(

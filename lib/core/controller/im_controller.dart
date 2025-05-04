@@ -170,7 +170,7 @@ class IMController extends GetxController with IMCallback, OpenIMLive {
       );
       ApiService().setToken(token);
       userInfo = UserFullInfo.fromJson(user.toJson()).obs;
-      _queryMyFullInfo();
+      queryMyFullInfo();
       _queryAtAllTag();
     } catch (e, s) {
       Logger.print('e: $e  s:$s');
@@ -188,7 +188,7 @@ class IMController extends GetxController with IMCallback, OpenIMLive {
     atAllTag = OpenIM.iMManager.conversationManager.atAllTag;
   }
 
-  void _queryMyFullInfo() async {
+  void queryMyFullInfo() async {
     final data = await Apis.queryMyFullInfo();
     if (data is UserFullInfo) {
       userInfo.update((val) {
